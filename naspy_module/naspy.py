@@ -333,13 +333,13 @@ class CiscoElement(Element):
                     element = Element(capa, name, plat, ip)
                 elems[ip] = element
 
-            l = Link(fr, to, element)
+            link = Link(fr, to, element)
 
-            if l not in self.links:
+            if link not in self.links:
                 added = True
-                self.addLink(l)
+                self.addLink(link)
 
-            if (ip not in visited and ip not in toVisit):
+            if ip not in visited and ip not in toVisit:
                 toVisit.append(ip)
         except:
             print('found new element but not enough information to be added\n')
@@ -588,7 +588,7 @@ class ExtremeElement(Element):
             client.close()
             return count
 
-    def parseCDP(self, text):
+    def parseCDP(self, text) -> bool:
         """
         Parses an entry for CDP table
         
@@ -638,6 +638,10 @@ class ExtremeElement(Element):
                 elif 'Extreme' in plat:
                     element = ExtremeElement(capa, name, plat, ip)
                 else:
+                    bashCmd = f"sudo nmap {ip}"
+                    process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
+                    output, error = process.communicate()
+                    print(f"Output del comando {output}\n")
                     element = Element(capa, name, plat, ip)
                     #se è tutto unknown provare con nmap
                 elems[ip] = element
@@ -1005,10 +1009,6 @@ def sniff(_timeout):
             elif 'EXOS' in platform or 'Extreme' in platform:
                 root = ExtremeElement(capa, id, platform, ip)
             else:
-                bashCmd = f"sudo nmap {ip}"
-                process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
-                output, error = process.communicate()
-                print(f"Output del comando {output}\n")
                 root = Element(capa, id, platform, ip)
 
             elems[ip] = root
