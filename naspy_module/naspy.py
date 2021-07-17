@@ -878,8 +878,8 @@ def retrieveInfoFromNmap():
     for ip in sorted(elems.keys()):
         if elems[ip].name == "Unknown":
             print(f"No information found for {ip}, trying nmap")
-            bashCmd = f"sudo nmap {ip}"
-            process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
+            bashCmd = [f"nmap {ip}"]
+            process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output, error = process.communicate()
             print(f"Output del comando {output}\n")
 
