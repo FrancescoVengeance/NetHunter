@@ -620,7 +620,7 @@ class ExtremeElement(Element):
                 elif re.search('.*Platform.*:.*', t):
                     plat = re.search('.*Platform.*: (.*)', t).group(1).strip()
                 elif re.search('.*Capabilities.*:.*', t):
-                    capa = re.search('.*Capabilities.*: (.*)', info[1]).group(1).strip()
+                    capa = re.search('.*Capabilities.*: (.*)', t).group(1).strip()
 
             if ip in elems:
                 element = elems[ip]
@@ -717,7 +717,7 @@ class ExtremeElement(Element):
                 added = True
                 self.addLink(l)
 
-            if (ip not in visited and ip not in toVisit):
+            if ip not in visited and ip not in toVisit:
                 toVisit.append(ip)
         except:
             print('found new element but not enough information to be added')
