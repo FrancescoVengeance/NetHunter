@@ -880,7 +880,7 @@ def retrieveInfoFromNmap():
             print(f"No information found for {ip}, trying nmap")
             output = subprocess.run(["nmap", "-O",ip], stdout=subprocess.PIPE, text=True)
             #print(f"Output del comando {output.stdout}\n")
-            out = output.stdout.split("\n")
+            out = output.stdout
             for line in out:
                 details = re.split("OS Details:.", line)
                 print(details)
