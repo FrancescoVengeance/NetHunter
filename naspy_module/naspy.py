@@ -881,7 +881,7 @@ def retrieveInfoFromNmap():
             #bashCmd = [f"nmap {ip}"]
             #process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             output = subprocess.run(["nmap", ip], stdout=subprocess.PIPE, text=True)
-            print(f"Output del comando {output.returncode}\n")
+            print(f"Output del comando {output}\n")
 
 def constructJSON():
     """
