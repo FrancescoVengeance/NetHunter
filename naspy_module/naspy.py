@@ -883,7 +883,7 @@ def retrieveInfoFromNmap():
             out = output.stdout.split("\n")
             for line in out:
                 details = re.split("OS Details:.", line)
-                print(details[1])
+                print(details)
 
 
 def constructJSON():
