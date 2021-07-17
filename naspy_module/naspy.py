@@ -879,7 +879,12 @@ def retrieveInfoFromNmap():
         if elems[ip].name == "Unknown":
             print(f"No information found for {ip}, trying nmap")
             output = subprocess.run(["nmap", "-O",ip], stdout=subprocess.PIPE, text=True)
-            print(f"Output del comando {output.stdout}\n")
+            #print(f"Output del comando {output.stdout}\n")
+            out = output.stdout.split("\n")
+            for line in out:
+                details = re.split("OS Details:.", line)
+                print(details[1])
+
 
 def constructJSON():
     """
