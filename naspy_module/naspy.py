@@ -881,10 +881,10 @@ def retrieveInfoFromNmap():
             output = subprocess.run(["nmap", "-O",ip], stdout=subprocess.PIPE, text=True)
             #print(f"Output del comando {output.stdout}\n")
             out = output.stdout.split("\n")
-            print(out)
-            '''for line in out:
-                details = re.split("OS Details:.", line)
-                print(details)'''
+            #print(out)
+            for line in out:
+                details = re.search('OS Details: (.*)', line).group(1).stip()
+                print(details)
 
 
 def constructJSON():
