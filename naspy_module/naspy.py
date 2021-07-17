@@ -877,7 +877,11 @@ def visit():
 def retrieveInfoFromNmap():
     for ip in sorted(elems.keys()):
         if elems[ip].name == "Unknown":
-            print("Adesso ti trovo con nmap")
+            print(f"No information found for {ip}, trying nmap")
+            bashCmd = f"sudo nmap {ip}"
+            process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
+            output, error = process.communicate()
+            print(f"Output del comando {output}\n")
 
 def constructJSON():
     """
