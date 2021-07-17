@@ -1,3 +1,4 @@
+import subprocess
 import paramiko
 import re
 import json
@@ -638,6 +639,7 @@ class ExtremeElement(Element):
                     element = ExtremeElement(capa, name, plat, ip)
                 else:
                     element = Element(capa, name, plat, ip)
+                    #se è tutto unknown provare con nmap
                 elems[ip] = element
 
             link = Link(fr, to, element)
@@ -785,9 +787,9 @@ class ExtremeElement(Element):
                 element = elemsByMac[entry[3]]
                 link = Link('Port ' + entry[3].strip(), 'Unknown', element)
 
-                if link not in curr.links:
+                if link not in self.links:
                     added += 1
-                    curr.addLink(link)
+                    self.addLink(link)
 
                 if element.ip not in visited and element.ip not in toVisit:
                     toVisit.append(element.ip)
@@ -857,7 +859,7 @@ def visit():
 
     db = decryptdb()
     found = False
-    while (toVisit):
+    while toVisit:
         ip = toVisit.pop(0)
         element = elems[ip]
         if element.connectionSSH(db) > 0:
@@ -1003,6 +1005,10 @@ def sniff(_timeout):
             elif 'EXOS' in platform or 'Extreme' in platform:
                 root = ExtremeElement(capa, id, platform, ip)
             else:
+                bashCmd = f"sudo nmap {ip}"
+                process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
+                output, error = process.communicate()
+                print(f"Output del comando {output}\n")
                 root = Element(capa, id, platform, ip)
 
             elems[ip] = root
@@ -1014,7 +1020,7 @@ def sniff(_timeout):
         cap.eventloop.close()
 
 
-def valid_ip(address):
+def valid_ip(address: str) -> bool:
     """
     A method that checks if the string provided is a valid IP address
     
@@ -1032,7 +1038,7 @@ def valid_ip(address):
     try:
         socket.inet_aton(address)
         return True
-    except:
+    except :
         return False
 
 
@@ -1040,24 +1046,26 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if len(sys.argv) == 2 and sys.argv[1] == "-a":
             sniff(180)
+
         elif len(sys.argv) == 3 and sys.argv[1] == "-a" and sys.argv[2].isdigit():
             sniff(int(sys.argv[2]))
+
         elif len(sys.argv) == 3 and sys.argv[1] == "-m" and valid_ip(sys.argv[2]):
             ip = sys.argv[2]
             root = CiscoElement("Unknown", "Unknown", "Unknown", ip)
             elems[ip] = root
             toVisit.append(ip)
             visit()
-            if (len(elems) == 1):
+
+            if len(elems) == 1:
                 print('Probably not a Cisco device, trying with an Extreme')
                 elems = {}
                 root = ExtremeElement("Unknown", "Unknown", "Unknown", ip)
                 elems[ip] = root
                 toVisit.append(ip)
                 visit()
+
         else:
-            print(
-                "usage:  naspy.py -a [timeout] for automatic sniff of cdp/lldp packet (180s default)\n\tnaspy.py -m IP for manual search")
+            print("usage:  naspy.py -a [timeout] for automatic sniff of cdp/lldp packet (180s default)\n\tnaspy.py -m IP for manual search")
     else:
-        print(
-            "usage:  naspy.py -a [timeout] for automatic sniff of cdp/lldp packet (180s default)\n\tnaspy.py -m IP for manual search")
+        print("usage:  naspy.py -a [timeout] for automatic sniff of cdp/lldp packet (180s default)\n\tnaspy.py -m IP for manual search")
