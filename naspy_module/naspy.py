@@ -879,7 +879,7 @@ def retrieveInfoFromNmap():
         if elems[ip].name == "Unknown":
             print(f"No information found for {ip}, trying nmap")
             bashCmd = [f"nmap {ip}"]
-            process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             output, error = process.communicate()
             print(f"Output del comando {output}\n")
 
