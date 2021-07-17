@@ -878,9 +878,7 @@ def retrieveInfoFromNmap():
     for ip in sorted(elems.keys()):
         if elems[ip].name == "Unknown":
             print(f"No information found for {ip}, trying nmap")
-            #bashCmd = [f"nmap {ip}"]
-            #process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            output = subprocess.run(["nmap", ip], stdout=subprocess.PIPE, text=True)
+            output = subprocess.run(["nmap", "-O",ip], stdout=subprocess.PIPE, text=True)
             print(f"Output del comando {output.stdout}\n")
 
 def constructJSON():
