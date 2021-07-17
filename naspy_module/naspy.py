@@ -884,7 +884,7 @@ def retrieveInfoFromNmap():
             #print(out)
             for line in out:
                 if re.search('OS details:(.*)', line):
-                    details = re.search('OS details:(.*)', line).group(1).stip()
+                    details = re.search('OS details:(.*)', line).group(1).strip()
                     print(details)
 
 
