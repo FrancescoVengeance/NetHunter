@@ -399,13 +399,13 @@ class CiscoElement(Element):
                     element = Element(capa, name, plat, ip)
                 elems[ip] = element
 
-            l = Link(fr, to, element)
+            link = Link(fr, to, element)
 
-            if l not in self.links:
+            if link not in self.links:
                 added = True
-                self.addLink(l)
+                self.addLink(link)
 
-            if (ip not in visited and ip not in toVisit):
+            if ip not in visited and ip not in toVisit:
                 toVisit.append(ip)
         except:
             print('found new element but not enough information to be added\n')
@@ -471,13 +471,13 @@ class CiscoElement(Element):
             if entry[2] in elemsByMac:
                 element = elemsByMac[entry[2]]
 
-                l = Link(entry[4].strip(), 'Unknown', element)
+                link = Link(entry[4].strip(), 'Unknown', element)
 
-                if l not in self.links:
+                if link not in self.links:
                     added += 1
-                    self.addLink(l)
+                    self.addLink(link)
 
-                if (element.ip not in visited and element.ip not in toVisit):
+                if element.ip not in visited and element.ip not in toVisit:
                     toVisit.append(element.ip)
 
         return added
@@ -871,8 +871,13 @@ def visit():
         visited.append(ip)
 
     if found:
+        retrieveInfoFromNmap()
         constructJSON()
 
+def retrieveInfoFromNmap():
+    for ip in sorted(elems.keys()):
+        if elems[ip].name == "Unknown":
+            print("Adesso ti trovo con nmap")
 
 def constructJSON():
     """
@@ -943,14 +948,14 @@ def constructJSON():
                 if newElements[j] not in toRemove:
                     toRemove.append(newElements[j])
 
-    print(f"before remove {len(newElements)}")
+    #print(f"before remove {len(newElements)}")
     for i in toRemove:
         if i in newElements:
             newElements.remove(i)
-    print(f"after remove {len(newElements)}")
+    #print(f"after remove {len(newElements)}")
 
     diffFile = '{"items":[' + ",\n".join(newElements) + ']}'
-    print(f"diff file: {diffFile}")
+    #print(f"diff file: {diffFile}")
 
     with open('Webpage/diff.json', 'w') as d:
         d.write(diffFile)
