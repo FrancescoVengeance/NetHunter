@@ -1,7 +1,6 @@
 import subprocess
 import paramiko
 import re
-import json
 import pyshark
 import sys
 import json
@@ -35,7 +34,7 @@ class ElementException(Exception):
     """
     pass
 
-
+#fatto
 class Element:
     """
     An abstract class modeling an element in the topology
@@ -908,7 +907,7 @@ def constructJSON():
             nodes += ',\n\t{"id":"' + ip + '", "label":"' + elems[ip].name + '","x":0,"y":1,"size":1,"mac":"' + elems[
                 ip].mac + '"}'
         for edge in elems[ip].links:
-            if ((ip, edge.element.ip) not in computed and (edge.element.ip, ip) not in computed):
+            if (ip, edge.element.ip) not in computed and (edge.element.ip, ip) not in computed:
                 if firstE:
                     edges += '{"id":' + str(
                         cont) + ', "source":"' + ip + '", "target": "' + edge.element.ip + '","from":"' + edge.port1 + '", "to":"' + edge.port2 + '"}'
