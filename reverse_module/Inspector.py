@@ -126,7 +126,7 @@ class Inspector:
                 capture.sniff(packet_count=1, timeout=2)
                 if capture:
                     print("GOT IT!")
-                    captured = False
+                    captured = True
 
             if capture:
                 packet = capture[0]
