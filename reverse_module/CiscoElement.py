@@ -132,7 +132,6 @@ class CiscoElement(Element):
         added = False
         try:
             s = text.split("\n")
-
             name = ip = fr = to = plat = capa = 'Unknown'
 
             for t in s:
@@ -164,11 +163,11 @@ class CiscoElement(Element):
 
             else:
                 if 'Cisco' in plat:
-                    element = CiscoElement(capa, name, plat, ip)
+                    element = CiscoElement(capa, name, plat, ip, self.inspector)
                 elif 'EXOS' in plat or 'Extreme' in plat:
-                    element = ExtremeElement(capa, name, plat, ip)
+                    element = ExtremeElement(capa, name, plat, ip, self.inspector)
                 else:
-                    element = Element(capa, name, plat, ip)
+                    element = Element(capa, name, plat, ip, self.inspector)
                 self.inspector.elements[ip] = element
 
             link = Link(fr, to, element)
@@ -230,11 +229,11 @@ class CiscoElement(Element):
                     element.name = name
             else:
                 if 'Cisco' in plat:
-                    element = CiscoElement(capa, name, plat, ip)
+                    element = CiscoElement(capa, name, plat, ip, self.inspector)
                 elif 'Extreme' in plat or 'EXOS' in plat:
-                    element = ExtremeElement(capa, name, plat, ip)
+                    element = ExtremeElement(capa, name, plat, ip, self.inspector)
                 else:
-                    element = Element(capa, name, plat, ip)
+                    element = Element(capa, name, plat, ip, self.inspector)
                 self.inspector.elements[ip] = element
 
             link = Link(fr, to, element)
@@ -269,7 +268,7 @@ class CiscoElement(Element):
         if ip in self.inspector.elements:
             element = self.inspector.elements[ip]
         else:
-            element = Element("Unknown", "Unknown", "Unknown", ip)
+            element = Element("Unknown", "Unknown", "Unknown", ip, self.inspector)
             self.inspector.elements[ip] = element
 
         element.addMac(mac)
