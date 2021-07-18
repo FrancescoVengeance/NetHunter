@@ -127,6 +127,7 @@ class Inspector:
                 if capture:
                     print("GOT IT!")
                     captured = True
+                    capture.eventloop.close()
 
             if capture:
                 packet = capture[0]
