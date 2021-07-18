@@ -1,6 +1,6 @@
 import json
 from Link import Link
-from Inspector import Inspector
+from Inspector import *
 
 
 class Element:
