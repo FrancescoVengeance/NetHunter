@@ -1,9 +1,9 @@
 from Element import *
-import CiscoElement
-import Link
+from CiscoElement import CiscoElement
 import json
 import difflib
 import pyshark
+
 
 class Inspector:
     def __init__(self):
@@ -15,7 +15,7 @@ class Inspector:
 
     def decryptDB(self) -> dict:
         print("Loading database...", end="\n")
-        with open("hosts.db" , "rb") as file:
+        with open("../naspy_module/hosts.db" , "rb") as file:
             data = file.read()
 
         database = json.loads(data.decode())
@@ -117,10 +117,9 @@ class Inspector:
             file.write("\n".join(newFile))
 
     def sniff(self, interface: str):
+        capture = pyshark.LiveCapture(interface=interface, display_filter="cdp or lldp")
         try:
             print("start sniffing", end="\n")
-            capture = pyshark.LiveCapture(interface=interface, display_filter="cdp or lldp")
-
             captured = False
             while not captured:
                 print("waiting to receive a packet...", end="\n")
@@ -144,11 +143,11 @@ class Inspector:
                     platform = packet.lldp.tlv_system_desc.strip()
 
                 if "Cisco" in platform:
-                    root = CiscoElement(capabilities, id, platform, ip)
+                    root = CiscoElement(capabilities, id, platform, ip, self)
                 elif "EXOS" in platform:
-                    root = None #ExtremeElement(capabilities, id, platform, ip)
+                    root = None  # ExtremeElement(capabilities, id, platform, ip)
                 else:
-                    root = Element(capabilities, id, platform, ip)
+                    root = Element(capabilities, id, platform, ip, self)
 
                 self.elements[ip] = root
                 self.toVisit.append(ip)

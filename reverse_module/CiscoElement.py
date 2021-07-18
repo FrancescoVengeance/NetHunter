@@ -1,6 +1,8 @@
 from Element import *
+from ExtremeElement import ExtremeElement
 import paramiko
-import socket
+import re
+
 
 class CiscoElement(Element):
     def connectionSSH(self, db: dict) -> int:
@@ -18,16 +20,16 @@ class CiscoElement(Element):
             returns the count of elements found
 
         """
-        list = []
-        ip = self.ip
+        # list = []
+        #ip = self.ip
         count = 0
         print("\ntrying to connect to: " + self.ip + "\n")
+        client = paramiko.SSHClient()
         try:
-            client = paramiko.SSHClient()
-            if ip not in db:
+            if self.ip not in db:
                 raise EntryNotFoundException
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect(hostname=ip, username=db[ip]['user'], password=db[ip]['pass'])
+            client.connect(hostname=self.ip, username=db[self.ip]['user'], password=db[self.ip]['pass'])
 
             sh = client.invoke_shell()
             sh.send("en\n")
@@ -38,7 +40,7 @@ class CiscoElement(Element):
                     if 'Incomplete' in resp:
                         raise ElementException
 
-            sh.send(db[ip]['en'] + "\n")
+            sh.send(db[self.ip]['en'] + "\n")
             sh.send("terminal length 0\n")
             sh.send("show lldp neighbors detail\n")
             sh.send("\n")
@@ -112,7 +114,7 @@ class CiscoElement(Element):
             client.close()
             return count
 
-    def parseCDP(self, text:str) -> bool:
+    def parseCDP(self, text: str) -> bool:
         """
         Parses an entry for CDP table
 
@@ -150,8 +152,8 @@ class CiscoElement(Element):
             if 'EXOS' in plat or 'Extreme' in plat:
                 to = 'Port ' + to
 
-            if ip in elems and isinstance(elems[ip], (ExtremeElement, CiscoElement)):
-                element = elems[ip]
+            if ip in self.inspector.elements and isinstance(self.inspector.elements[ip], (ExtremeElement, CiscoElement)):
+                element = self.inspector.elements[ip]
                 if element.type == 'Unknown':
                     element.type = capa
                 if element.platform == 'Unknown':
@@ -167,7 +169,7 @@ class CiscoElement(Element):
                     element = ExtremeElement(capa, name, plat, ip)
                 else:
                     element = Element(capa, name, plat, ip)
-                elems[ip] = element
+                self.inspector.elements[ip] = element
 
             link = Link(fr, to, element)
 
@@ -175,8 +177,8 @@ class CiscoElement(Element):
                 added = True
                 self.addLink(link)
 
-            if ip not in visited and ip not in toVisit:
-                toVisit.append(ip)
+            if ip not in self.inspector.visited and ip not in self.inspector.toVisit:
+                self.inspector.toVisit.append(ip)
         except:
             print('found new element but not enough information to be added\n')
         finally:
@@ -218,8 +220,8 @@ class CiscoElement(Element):
                 elif re.search('.*System Description: (.*)', t):
                     plat = s[s.index(t) + 1].strip()
 
-            if ip in elems and isinstance(elems[ip], (ExtremeElement, CiscoElement)):
-                element = elems[ip]
+            if ip in self.inspector.elements and isinstance(self.inspector.elements[ip], (ExtremeElement, CiscoElement)):
+                element = self.inspector.elements[ip]
                 if element.type == 'Unknown':
                     element.type = capa
                 if element.platform == 'Unknown':
@@ -233,7 +235,7 @@ class CiscoElement(Element):
                     element = ExtremeElement(capa, name, plat, ip)
                 else:
                     element = Element(capa, name, plat, ip)
-                elems[ip] = element
+                self.inspector.elements[ip] = element
 
             link = Link(fr, to, element)
 
@@ -241,8 +243,8 @@ class CiscoElement(Element):
                 added = True
                 self.addLink(link)
 
-            if ip not in visited and ip not in toVisit:
-                toVisit.append(ip)
+            if ip not in self.inspector.visited and ip not in self.inspector.toVisit:
+                self.inspector.toVisit.append(ip)
         except:
             print('found new element but not enough information to be added\n')
         finally:
@@ -264,15 +266,15 @@ class CiscoElement(Element):
 
         element = None
 
-        if ip in elems:
-            element = elems[ip]
+        if ip in self.inspector.elements:
+            element = self.inspector.elements[ip]
         else:
             element = Element("Unknown", "Unknown", "Unknown", ip)
-            elems[ip] = element
+            self.inspector.elements[ip] = element
 
         element.addMac(mac)
 
-        elemsByMac[mac] = element
+        self.inspector.elementsByMac[mac] = element
 
     def parseMacTable(self, text: str):
         """
@@ -298,14 +300,14 @@ class CiscoElement(Element):
             found = False
             for j in range(len(text)):
                 r2 = re.compile('\s\s+').split(text[j])
-                if (r1[4] == r2[4] and r1[2] != r2[2]):
+                if r1[4] == r2[4] and r1[2] != r2[2]:
                     found = True
             if not found:
                 single_occurrences.append(r1)
 
         for entry in single_occurrences:
-            if entry[2] in elemsByMac:
-                element = elemsByMac[entry[2]]
+            if entry[2] in self.inspector.elementsByMac:
+                element = self.inspector.elementsByMac[entry[2]]
 
                 link = Link(entry[4].strip(), 'Unknown', element)
 
@@ -313,7 +315,6 @@ class CiscoElement(Element):
                     added += 1
                     self.addLink(link)
 
-                if element.ip not in visited and element.ip not in toVisit:
-                    toVisit.append(element.ip)
-
+                if element.ip not in self.inspector.visited and element.ip not in self.inspector.toVisit:
+                    self.inspector.toVisit.append(element.ip)
         return added

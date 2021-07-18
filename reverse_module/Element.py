@@ -1,5 +1,7 @@
 import json
-import Link
+from Link import Link
+from Inspector import Inspector
+
 
 class Element:
     """
@@ -27,9 +29,10 @@ class Element:
         Adds the MAC address to the element
     """
 
-    def __init__(self, type, name, platform, ip):
+    def __init__(self, type, name, platform, ip, inspector: Inspector):
         self.type = type
         self.name = name
+        self.inspector = inspector
         self.platform = platform
         self.ip = ip
         self.mac = ''
@@ -39,7 +42,7 @@ class Element:
         return self.ip == other.ip
 
     def __hash__(self):
-        return hash(self.ip_address)
+        return hash(self.ip)
 
     def addMac(self, mac: str):
         """
@@ -129,6 +132,7 @@ class Element:
             the text to parse
         """
         pass
+
 
 class EntryNotFoundException(Exception):
     """

@@ -1,4 +1,6 @@
 import  Element
+
+
 class Link:
     """
     A class modeling a link between two elements
