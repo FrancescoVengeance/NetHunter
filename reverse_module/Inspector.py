@@ -1,4 +1,4 @@
-from Element import *
+from Element import Element
 from CiscoElement import CiscoElement
 import json
 import difflib
