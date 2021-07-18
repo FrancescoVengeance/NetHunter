@@ -1,6 +1,5 @@
 import json
 from Link import Link
-from Inspector import *
 
 
 class Element:
@@ -29,7 +28,7 @@ class Element:
         Adds the MAC address to the element
     """
 
-    def __init__(self, type, name, platform, ip, inspector: Inspector):
+    def __init__(self, type, name, platform, ip, inspector):
         self.type = type
         self.name = name
         self.inspector = inspector
