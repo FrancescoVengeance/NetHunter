@@ -88,6 +88,7 @@ class Element:
 
         """
         print("\ntrying to connect to: " + self.ip + "\n\nunable to connect to SSH")
+        self.deviceScan()
         return 0
 
     def parseCDP(self, text: str):
