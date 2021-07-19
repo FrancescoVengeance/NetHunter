@@ -109,7 +109,7 @@ class CiscoElement(Element):
             print('links found for ' + self.ip + ': ' + str(count))
 
         except EntryNotFoundException:
-            print('unable to connect to SSH')
+            print('unable to connect to SSH cisco device')
             self.deviceScan()
         finally:
             client.close()
