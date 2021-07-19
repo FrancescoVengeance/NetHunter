@@ -1,5 +1,7 @@
 import json
+import re
 from Link import Link
+import subprocess
 
 
 class Element:
@@ -131,6 +133,15 @@ class Element:
             the text to parse
         """
         pass
+
+    def deviceScan(self):
+        if self.name == "Unknown":
+            print(f"no information found for {self.ip}, trying port-scanning")
+            output = subprocess.run(["nmap", "-O",self.ip], stdout=subprocess.PIPE, text=True)
+            out = output.stdout.split("\n")
+            for line in out:
+                if re.search('OS details:(.*)', line):
+                    self.name = re.search('OS details:(.*)', line).group(1).strip()
 
 
 class EntryNotFoundException(Exception):

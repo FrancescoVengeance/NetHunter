@@ -108,8 +108,9 @@ class CiscoElement(Element):
 
             print('links found for ' + self.ip + ': ' + str(count))
 
-        except:
+        except EntryNotFoundException:
             print('unable to connect to SSH')
+            self.deviceScan()
         finally:
             client.close()
             return count
@@ -159,7 +160,6 @@ class CiscoElement(Element):
                     element.platform = plat
                 if element.name == 'Unknown':
                     element.name = name
-
 
             else:
                 if 'Cisco' in plat:
