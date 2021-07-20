@@ -110,7 +110,7 @@ class CiscoElement(Element):
 
         except EntryNotFoundException:
             print('unable to connect to SSH')
-            self.deviceScan()
+            #self.deviceScan()
         finally:
             client.close()
             return count
