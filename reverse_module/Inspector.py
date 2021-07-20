@@ -42,6 +42,16 @@ class Inspector:
         cont = 0
         computed = []
 
+        for key in self.elements.keys():
+            for key2 in self.elements.keys():
+                if self.elements[key] == self.elements[key2]:
+                    pass
+                elif self.elements[key].name == self.elements[key2].name:
+                    if len(self.elements[key].links) > len(self.elements[key2].links):
+                        self.elements.pop(key2)
+                    else:
+                        self.elements.pop(key)
+
         for ip in sorted(self.elements.keys()):
             if first:
                 nodes += '{"id":"' + ip + '", "label":"' + self.elements[ip].name + '","x":0,"y":0,"size":1,"mac":"' + self.elements[ip].mac + '"}'
