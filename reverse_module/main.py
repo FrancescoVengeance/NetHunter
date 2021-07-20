@@ -26,8 +26,12 @@ if __name__ == "__main__":
     if len(sys.argv) == 2 and (sys.argv[1] == "-a" or sys.argv[1] == "--auto"):
         inspector = Inspector()
         inspector.sniff("eth0")
-    elif len(sys.argv) == 3 and (sys.argv[1] == "-m" or sys.argv[1] == "--manual") and validateIP(sys.argv[2]):
-        inspector = Inspector()
-        inspector.manualConnection(sys.argv[2])
+    elif len(sys.argv) == 3 and (sys.argv[1] == "-m" or sys.argv[1] == "--manual"):
+        if validateIP(sys.argv[2]):
+            inspector = Inspector()
+            inspector.manualConnection(sys.argv[2])
+        else:
+            print("Invalid IP address\n")
+            print(usage())
     else:
         print(usage())
