@@ -183,7 +183,7 @@ class CiscoElement(Element):
         finally:
             return added
 
-    def parseLLDP(self, text: str) ->bool:
+    def parseLLDP(self, text: str) -> bool:
         """
         Parses an entry of the LLDP table
 
@@ -275,7 +275,7 @@ class CiscoElement(Element):
 
         self.inspector.elementsByMac[mac] = element
 
-    def parseMacTable(self, text: str):
+    def parseMacTable(self, text):
         """
         Parses a mac Table
 
@@ -307,7 +307,6 @@ class CiscoElement(Element):
         for entry in single_occurrences:
             if entry[2] in self.inspector.elementsByMac:
                 element = self.inspector.elementsByMac[entry[2]]
-
                 link = Link(entry[4].strip(), 'Unknown', element)
 
                 if link not in self.links:

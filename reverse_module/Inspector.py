@@ -160,3 +160,10 @@ class Inspector:
                 self.visit()
         finally:
             capture.eventloop.close()
+
+    def manualConnection(self, ip):
+        first = CiscoElement("Unknown", "Unknown", "Unknown", ip, self)
+        self.elements[ip] = first
+        self.toVisit.append(ip)
+        self.visit()
+        #se non riesco a connettermi provare con un Extreme
