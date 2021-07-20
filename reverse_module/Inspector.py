@@ -34,14 +34,7 @@ class Inspector:
             #usa nmap per quelli unknown
             self.buildJSON()
 
-    def buildJSON(self):
-        first = True
-        firstE = True
-        nodes = '{"nodes":[\n\t'
-        edges = '"edges":[\n\t'
-        cont = 0
-        computed = []
-
+    def removeDuplicate(self):
         keysToRemove = []
         for key in self.elements.keys():
             for key2 in self.elements.keys():
@@ -56,6 +49,14 @@ class Inspector:
         for key in keysToRemove:
             if key in self.elements.keys():
                 self.elements.pop(key)
+
+    def buildJSON(self):
+        first = True
+        firstE = True
+        nodes = '{"nodes":[\n\t'
+        edges = '"edges":[\n\t'
+        cont = 0
+        computed = []
 
         for ip in sorted(self.elements.keys()):
             if first:
