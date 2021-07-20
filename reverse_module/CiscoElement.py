@@ -67,7 +67,7 @@ class CiscoElement(Element):
                     resp = sh.recv(9999).decode('ascii')
                     cdpbuff += resp
             cdp = []
-            if not re.search('.*CDP.*not.*', lldpbuff):
+            if not re.search('.*CDP.*not.*', cdpbuff):
                 cdp = re.compile('--+').split(cdpbuff)[1:]
 
             for text in cdp:
