@@ -54,7 +54,7 @@ class Inspector:
                         keysToRemove.append(key)
 
         for key in keysToRemove:
-            self.elements.pop(key)
+            del self.elements[key]
 
         for ip in sorted(self.elements.keys()):
             if first:
