@@ -185,6 +185,7 @@ try:
         log.close()
         current_time = datetime.now().strftime("%H:%M")
         if current_time == "00:00":
+            pass
             #sender = LogSender()
             #sender.send(daily_body_message, 'Daily Report!', attachment='log.naspy', att_type='filename')
 except (KeyboardInterrupt, RuntimeError, TypeError):
