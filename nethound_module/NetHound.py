@@ -175,8 +175,8 @@ try:
                 log.close()
                 time.sleep(stp_monitor.waiting_timer)
                 print("Sending log by email")
-                sender = LogSender()
-                sender.send(tc_body_message, 'Topology Change Report!', attachment='log.naspy', att_type='filename')
+                # sender = LogSender()
+                # sender.send(tc_body_message, 'Topology Change Report!', attachment='log.naspy', att_type='filename')
             else:
                 print('No changes in Topology!')
                 log.write('%s - No changes in Topology!\n' % datetime.now().strftime("%H:%M:%S"))
@@ -185,8 +185,8 @@ try:
         log.close()
         current_time = datetime.now().strftime("%H:%M")
         if current_time == "00:00":
-            sender = LogSender()
-            sender.send(daily_body_message, 'Daily Report!', attachment='log.naspy', att_type='filename')
+            #sender = LogSender()
+            #sender.send(daily_body_message, 'Daily Report!', attachment='log.naspy', att_type='filename')
 except (KeyboardInterrupt, RuntimeError, TypeError):
     if topology_cng_pkg is not None:
         topology_cng_pkg.eventloop.close()
