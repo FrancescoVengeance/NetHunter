@@ -1,6 +1,9 @@
 import getpass
-from builtins import print
 from scapy.all import *
+from scapy.layers.dhcp import BOOTP, DHCP
+from scapy.layers.dns import DNS, DNSQR
+from scapy.layers.inet import IP, UDP
+from scapy.layers.l2 import Ether
 from SSHConnettors import *
 import base64
 import json
