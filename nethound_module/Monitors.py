@@ -1,5 +1,4 @@
 from builtins import print
-
 from NetworkElements import *
 from NetInterface import *
 from LogSender import LogSender
@@ -382,8 +381,8 @@ class STPMonitor:
                         switch.get_port(src).negotiation = True
                         switch.get_port(src).negotiation_rcvd = True
                         msg = "Alert, interface %s on switch %s allow trunk negotiation!" % (port_name, switch.name)
-                        sender = LogSender()
-                        sender.send(msg, 'Switch Spoofing Found!')
+                        #sender = LogSender()
+                        #sender.send(msg, 'Switch Spoofing Found!')
                         print(msg)
                         self.log.write(msg)
             else:
