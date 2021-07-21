@@ -32,7 +32,7 @@ class NetInterface:
                 backend=default_backend()
             )
 
-    def wait_for_initial_information(self):
+    async def wait_for_initial_information(self):
         print("Wait for initial configurations... ")
         capt = pyshark.LiveCapture(interface=self.interface, display_filter="cdp or lldp")
         capt.sniff(packet_count=3, timeout=60)
