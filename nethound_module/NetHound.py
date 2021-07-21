@@ -118,7 +118,7 @@ capture = pyshark.LiveCapture(interface=net_interface.interface)
 
 try:
     if mode == 'stp' or mode == 'all':
-        net_interface.wait_for_initial_information()
+        await net_interface.wait_for_initial_information()
         if net_interface.ssh_no_credential_connection():
             stp_monitor.add_switch(net_interface.take_interfaces())
             net_interface.enable_monitor_mode()
