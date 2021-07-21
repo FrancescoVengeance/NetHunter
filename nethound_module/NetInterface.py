@@ -147,7 +147,7 @@ class NetInterface:
         broad_mac = 'ff:ff:ff:ff:ff:ff'
         dest_ip = '255.255.255.255'
 
-        dns_request = Ether(src=local_mac, dst=broad_mac) /IP(dst=dest_ip)/UDP(sport=RandShort(), dport=53) / \
+        dns_request = Ether(src=local_mac, dst=broad_mac) / IP(dst=dest_ip)/UDP(sport=RandShort(), dport=53) / \
                       DNS(rd=1, qd=DNSQR(qname="google.it", qtype="A"))
 
         sendp(dns_request, iface=self.interface, verbose=False, count=15, inter=0.5)

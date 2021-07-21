@@ -1,3 +1,5 @@
+import concurrent.futures
+
 from NetInterface import *
 from Monitors import *
 from LogSender import LogSender
@@ -16,6 +18,7 @@ full_usage = "mode options: \n" \
 
 print("Welcome to NetHound - a NASPy tool")
 
+password = None
 if os.geteuid() != 0:
     print("You need to run as root!")
     sys.exit(0)
@@ -67,7 +70,7 @@ tc_body_message = "Hi,\n You are receiving this report because there was a Topol
                   "in the topology, please check it!"
 daily_body_message = "Hi,\n This is the daily report sent every day at 00:00!"
 
-net_interface = NetInterface(interface, password)
+net_interface = NetInterface(interface, "Buff96")
 net_interface.timeout = 35
 
 stp_monitor = STPMonitor(log)
@@ -110,6 +113,9 @@ def update_callback(pkt):
         arp_monitor.update_arp_table(pkt)
 
 
+topology_cng_pkg = None
+capture = pyshark.LiveCapture(interface=net_interface.interface)
+
 try:
     if mode == 'stp' or mode == 'all':
         net_interface.wait_for_initial_information()
@@ -118,7 +124,7 @@ try:
             net_interface.enable_monitor_mode()
 
         print('start sniffing...')
-        capture = pyshark.LiveCapture(interface=net_interface.interface)
+        # capture = pyshark.LiveCapture(interface=net_interface.interface)
         try:
             capture.apply_on_packets(update_callback, timeout=net_interface.timeout)
         except concurrent.futures.TimeoutError:
