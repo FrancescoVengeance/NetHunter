@@ -55,7 +55,7 @@ class Inspector:
         edges = '"edges":[\n\t'
         cont = 0
         computed = []
-        self.removeDuplicate()
+        #self.removeDuplicate()
 
         for ip in sorted(self.elements.keys()):
             if first:
