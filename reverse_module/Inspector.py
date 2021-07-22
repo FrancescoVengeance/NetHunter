@@ -173,7 +173,7 @@ class Inspector:
                     root = Element(capabilities, id, platform, ip, self)
 
                 self.elements[ip] = root
-                self.toVisit.append(ip)
+                self.toVisit.append(ip) # usare l'hostname
                 self.visit()
         finally:
             capture.eventloop.close()
