@@ -38,17 +38,14 @@ class Inspector:
         keysToRemove = []
         for key in self.elements.keys():
             for key2 in self.elements.keys():
-                if self.elements[key] == self.elements[key2]:
-                    pass
-                elif self.elements[key].name == self.elements[key2].name:
-                    if len(self.elements[key].links) > len(self.elements[key2].links):
+                if key != key2 and self.elements[key].name == self.elements[key2].name:
+                    if len(self.elements[key].links) >= len(self.elements[key2].links):
                         keysToRemove.append(key2)
                     else:
                         keysToRemove.append(key)
 
         for key in keysToRemove:
-            if key in self.elements.keys():
-                self.elements.pop(key)
+            self.elements.pop(key)
 
     def buildJSON(self):
         first = True
@@ -57,7 +54,7 @@ class Inspector:
         edges = '"edges":[\n\t'
         cont = 0
         computed = []
-        # self.removeDuplicate()
+        self.removeDuplicate()
 
         for ip in sorted(self.elements.keys()):
             if first:
