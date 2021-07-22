@@ -44,6 +44,7 @@ class Inspector:
                     else:
                         keysToRemove.append(key)
 
+        print(f"removing... {keysToRemove}")
         for key in keysToRemove:
             self.elements.pop(key)
 
