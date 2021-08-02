@@ -146,9 +146,12 @@ class Inspector:
         try:
             print("start sniffing", end="\n")
             captured = False
+            elapsedTime = 0
             while not captured:
-                print("waiting to receive a packet...", end="\n")
                 capture.sniff(packet_count=1, timeout=1)
+                elapsedTime += 1
+                print(f"waiting to receive a packet... elapsed time: {elapsedTime}", end="\n")
+
                 if capture:
                     print("GOT IT!")
                     captured = True
