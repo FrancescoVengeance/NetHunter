@@ -45,6 +45,7 @@ class Naspy:
                 if capture:
                     print("GOT IT")
                     captured = True
+                    capture.eventloop.close()
 
             packet = capture[0]
             rootElement = None
@@ -64,4 +65,3 @@ class Naspy:
 
         finally:
             capture.eventloop.close()
-            capture.close()
