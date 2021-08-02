@@ -42,6 +42,7 @@ class CiscoElement(Element):
 
             sh.send(db[self.ip]['enable'] + "\n")
             sh.send("terminal length 0\n")
+            self.getHostName(sh)
             #show ip domain-name prendere il dominio
             #show running-config e prendere il nome
             sh.send("show lldp neighbors detail\n")
@@ -320,3 +321,17 @@ class CiscoElement(Element):
                 if element.ip not in self.inspector.visited and element.ip not in self.inspector.toVisit:
                     self.inspector.toVisit.append(element.ip)
         return added
+
+    def getHostName(self, shell):
+        shell.send("show running-config\n")
+        shell.send("\n")
+
+        out = ""
+        while not re.search('hostname (.*)', out):
+            if shell.recv_ready():
+                out += shell.recv(9999).decode("ascii")
+        for line in out.split("\n"):
+            print(line)
+
+
+
