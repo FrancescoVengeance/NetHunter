@@ -111,7 +111,7 @@ class Inspector:
                 toRemove.append(newElements[i])
             for j in range(i + 1, len(newElements)):
                 je2 = json.loads(newElements[j])
-                if (je1['id'] == je2['id'] and je1['new'] != je2['new']):
+                if je1['id'] == je2['id'] and je1['new'] != je2['new']:
                     if newElements[i] not in toRemove:
                         toRemove.append(newElements[i])
                     if newElements[j] not in toRemove:
@@ -148,7 +148,7 @@ class Inspector:
             captured = False
             while not captured:
                 print("waiting to receive a packet...", end="\n")
-                capture.sniff(packet_count=1, timeout=2)
+                capture.sniff(packet_count=1, timeout=1)
                 if capture:
                     print("GOT IT!")
                     captured = True
@@ -177,7 +177,7 @@ class Inspector:
 
                 self.elements[ip] = root
                 self.elementsByHostname[root.name] = root
-                self.toVisit.append(ip) # usare l'hostname
+                self.toVisit.append(ip)
                 self.visit()
         finally:
             capture.eventloop.close()
