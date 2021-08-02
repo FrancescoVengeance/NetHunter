@@ -60,7 +60,7 @@ class Inspector:
         #self.removeDuplicate()
 
         for key in self.elementsByHostname:
-            print(self.elementsByHostname[key], end="\n")
+            print(self.elementsByHostname[key].name, end="\n")
 
         for ip in sorted(self.elements.keys()):
             if first:
