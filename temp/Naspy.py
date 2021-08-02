@@ -51,17 +51,27 @@ class Naspy:
             rootElement = None
 
             if "cdp" in packet:
-                name = packet.cdp.deviceid.strip()
+                hostname = packet.cdp.deviceid.strip()
                 ip = packet.cdp.nrgyz_ip_address.strip()
                 capabilities = packet.cdp.capabilities.strip()
                 platform = packet.cdp.platform.strip()
             else:
-                name = packet.lldp.tlv_system_name.strip()
+                hostname = packet.lldp.tlv_system_name.strip()
                 ip = packet.lldp.mgn_addr_ip4.strip()
                 capabilities = packet.lldp.tlv_system_cap.strip()
                 platform = packet.lldp.tlv_system_desc.strip()
 
-            print(f"Device id: {name}, ip {ip}, capabilities {capabilities}, platform {platform}")
+            print(f"(root device) Device id: {hostname}, ip {ip}, capabilities {capabilities}, platform {platform}")
+
+            if "Cisco" in platform:
+                rootElement = CiscoElement(hostname, ip, capabilities, platform, self.manager)
+            elif "EXOS" in platform:
+                rootElement = ExtremeElement(hostname, ip, capabilities, platform, self.manager)
+            else:
+                rootElement = Element(hostname, ip, capabilities, platform, self.manager)
+
+            self.manager.addElement(hostname, rootElement)
+            self.manager.addToVisit(rootElement)
 
         finally:
             capture.eventloop.close()
