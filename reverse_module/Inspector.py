@@ -11,9 +11,11 @@ class Inspector:
         self.visited = []
         self.elements = {}
         self.elementsByMac = {}
+        self.elementsByHostname = {}
         self.database = self.decryptDB()
 
-    def decryptDB(self) -> dict:
+    @staticmethod
+    def decryptDB() -> dict:
         print("Loading database...", end="\n")
         with open("../naspy_module/hosts.db" , "rb") as file:
             data = file.read()
@@ -56,6 +58,9 @@ class Inspector:
         cont = 0
         computed = []
         #self.removeDuplicate()
+
+        for key in self.elementsByHostname:
+            print(self.elementsByHostname[key], end="\n")
 
         for ip in sorted(self.elements.keys()):
             if first:
@@ -171,6 +176,7 @@ class Inspector:
                     root = Element(capabilities, id, platform, ip, self)
 
                 self.elements[ip] = root
+                self.elementsByHostname[root.name] = root
                 self.toVisit.append(ip) # usare l'hostname
                 self.visit()
         finally:

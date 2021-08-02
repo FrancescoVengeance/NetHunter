@@ -1,4 +1,5 @@
 {"10.0.0.4":{"pass" : "ciao","en" : "ciao","user" : "francesco"},
  "10.0.2.3":{"pass" : "ciao","en" : "ciao","user" : "francesco"},
 "10.0.0.1":{"pass" : "ciao","en" : "ciao","user" : "francesco"},
-"10.0.2.1":{"pass" : "ciao","en" : "ciao","user" : "francesco"}}
+"10.0.2.1":{"pass" : "ciao","en" : "ciao","user" : "francesco"},
+"192.168.1.253":{"pass" : "3890498266","en" : "3890498266","user" : "francesco"}}

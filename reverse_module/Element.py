@@ -137,7 +137,7 @@ class Element:
 
     def deviceScan(self):
         print(f"no information found for {self.ip}, trying port-scanning")
-        output = subprocess.run(["nmap", "-O",self.ip], stdout=subprocess.PIPE, text=True)
+        output = subprocess.run(["nmap", "-O", self.ip], stdout=subprocess.PIPE, text=True)
         out = output.stdout.split("\n")
         for line in out:
             if re.search('OS details:(.*)', line):

@@ -42,6 +42,8 @@ class CiscoElement(Element):
 
             sh.send(db[self.ip]['en'] + "\n")
             sh.send("terminal length 0\n")
+            #show ip domain-name
+            #show running-config e prendere il nome
             sh.send("show lldp neighbors detail\n")
             sh.send("\n")
             lldpbuff = ''
@@ -168,6 +170,8 @@ class CiscoElement(Element):
                     element = ExtremeElement(capa, name, plat, ip, self.inspector)
                 else:
                     element = Element(capa, name, plat, ip, self.inspector)
+
+                self.inspector.elementsByHostname[element.name] = element
                 self.inspector.elements[ip] = element
 
             link = Link(fr, to, element)
