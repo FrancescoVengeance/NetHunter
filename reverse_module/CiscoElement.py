@@ -42,7 +42,7 @@ class CiscoElement(Element):
 
             sh.send(db[self.ip]['enable'] + "\n")
             sh.send("terminal length 0\n")
-            self.getHostName(sh)
+            #self.getHostName(sh)
             #show ip domain-name prendere il dominio
             #show running-config e prendere il nome
             sh.send("show lldp neighbors detail\n")
