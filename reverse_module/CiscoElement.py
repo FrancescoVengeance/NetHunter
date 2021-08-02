@@ -334,8 +334,9 @@ class CiscoElement(Element):
         for line in out.split("\n"):
             if re.search('hostname (.*)', line):
                 self.name = re.search('hostname (.*)', line).group(1).strip()
+                break
 
-        print(self.name)
+
 
 
 

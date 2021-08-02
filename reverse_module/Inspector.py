@@ -34,7 +34,7 @@ class Inspector:
 
         if found:
             #usa nmap per quelli unknown
-            self.buildJSON()
+            self.buildJSONhostname()
 
     def removeDuplicate(self):
         keysToRemove = []
@@ -191,3 +191,82 @@ class Inspector:
         self.toVisit.append(ip)
         self.visit()
         #se non riesco a connettermi provare con un Extreme
+
+    def buildJSONhostname(self):
+        first = True
+        firstE = True
+        nodes = '{"nodes":[\n\t'
+        edges = '"edges":[\n\t'
+        cont = 0
+        computed = []
+        #self.removeDuplicate()
+
+        for key in self.elementsByHostname:
+            print(self.elementsByHostname[key].name, end="\n")
+
+        for host in sorted(self.elementsByHostname.keys()):
+            if first:
+                nodes += '{"id":"' + self.elementsByHostname[host].ip + '", "label":"' + host + '","x":0,"y":0,"size":1,"mac":"' + self.elementsByHostname[host].mac + '"}'
+                first = False
+            else:
+                nodes += ',\n\t{"id":"' + self.elementsByHostname[host].ip + '", "label":"' + host + '","x":0,"y":1,"size":1,"mac":"' + self.elementsByHostname[host].mac + '"}'
+            for edge in self.elementsByHostname[host].links:
+                if (self.elementsByHostname[host].ip, edge.element.ip) not in computed and (edge.element.ip, self.elementsByHostname[host].ip) not in computed:
+                    if firstE:
+                        edges += '{"id":' + str(
+                            cont) + ', "source":"' + self.elementsByHostname[host].ip + '", "target": "' + edge.element.ip + '","from":"' + edge.port1 + '", "to":"' + edge.port2 + '"}'
+                        firstE = False
+                    else:
+                        edges += ',\n\t{"id":' + str(
+                            cont) + ', "source":"' + self.elementsByHostname[host].ip + '", "target": "' + edge.element.ip + '","from":"' + edge.port1 + '", "to":"' + edge.port2 + '"}'
+                    computed.append((self.elementsByHostname[host].ip, edge.element.ip))
+                    cont += 1
+
+        nodes += '\n],'
+        edges += '\n]}'
+
+        s = nodes + edges
+
+        nF = s.split('\n')
+        with open('../naspy_module/Webpage/data.json') as f2:
+            oldFile = f2.read()
+
+        newElements = []
+        for line in list(
+                difflib.unified_diff(oldFile.split('\n'), nF, fromfile='oldFile', tofile='newFile', lineterm="\n"))[2:]:
+            end = 0
+            if line[len(line) - 1] == ',':
+                end = len(line) - 2
+            else:
+                end = len(line) - 1
+
+            if '{' in line:
+                if line[0] == '+':
+                    newElements.append(line[1:end] + ', "new":"true"}')
+                if line[0] == '-':
+                    newElements.append(line[1:end] + ', "new":"false"}')
+
+        toRemove = []
+        for i in range(len(newElements)):
+            je1 = json.loads(newElements[i])
+            if 'source' in je1:
+                toRemove.append(newElements[i])
+            for j in range(i + 1, len(newElements)):
+                je2 = json.loads(newElements[j])
+                if je1['id'] == je2['id'] and je1['new'] != je2['new']:
+                    if newElements[i] not in toRemove:
+                        toRemove.append(newElements[i])
+                    if newElements[j] not in toRemove:
+                        toRemove.append(newElements[j])
+
+        for i in toRemove:
+            if i in newElements:
+                newElements.remove(i)
+
+        diffFile = '{"items":[' + ",\n".join(newElements) + ']}'
+
+        with open('../naspy_module/Webpage/diff.json', 'w') as d:
+            d.write(diffFile)
+
+        with open('../naspy_module/Webpage/data.json', 'w') as file:
+            file.write("\n".join(nF))
