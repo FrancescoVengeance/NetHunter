@@ -38,6 +38,7 @@ class Element:
         self.ip = ip
         self.mac = ''
         self.links = []
+        #self.connectedDevices = 0
 
     def __eq__(self, other):
         return self.ip == other.ip

@@ -29,7 +29,7 @@ class CiscoElement(Element):
             if self.ip not in db:
                 raise EntryNotFoundException
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect(hostname=self.ip, username=db[self.ip]['user'], password=db[self.ip]['pass'])
+            client.connect(hostname=self.ip, username=db[self.ip]['username'], password=db[self.ip]['password'])
 
             sh = client.invoke_shell()
             sh.send("en\n")
@@ -40,7 +40,7 @@ class CiscoElement(Element):
                     if 'Incomplete' in resp:
                         raise ElementException
 
-            sh.send(db[self.ip]['en'] + "\n")
+            sh.send(db[self.ip]['enable'] + "\n")
             sh.send("terminal length 0\n")
             #show ip domain-name
             #show running-config e prendere il nome
@@ -108,7 +108,7 @@ class CiscoElement(Element):
 
             count += self.parseMacTable(mac_table)
 
-            print('links found for ' + self.ip + ': ' + str(count))
+            print('links found for ' + self.ip + ': ' + str(len(self.links)))
 
         except EntryNotFoundException:
             print('unable to connect to SSH')
