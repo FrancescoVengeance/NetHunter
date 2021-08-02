@@ -14,8 +14,8 @@ class Inspector:
         self.elementsByHostname = {}
         self.database = self.decryptDB()
 
-    @staticmethod
-    def decryptDB() -> dict:
+
+    def decryptDB(self) -> dict:
         print("Loading database...", end="\n")
         with open("../naspy_module/hosts.db" , "rb") as file:
             data = file.read()
