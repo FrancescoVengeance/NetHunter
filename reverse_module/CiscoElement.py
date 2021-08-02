@@ -330,8 +330,12 @@ class CiscoElement(Element):
         while not re.search('hostname (.*)', out):
             if shell.recv_ready():
                 out += shell.recv(9999).decode("ascii")
+
         for line in out.split("\n"):
-            print(line)
+            if re.search('hostname (.*)', line):
+                self.name = re.search('hostname (.*)', line).group(1).strip()
+
+        print(self.name)
 
 
 
