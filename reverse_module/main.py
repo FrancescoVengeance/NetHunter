@@ -28,7 +28,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 4 and ((sys.argv[1] == "-a" or sys.argv[1] == "--auto") and (sys.argv[2] == "-i" or sys.argv[2] == "--interface")):
         inspector = Inspector()
         inspector.sniff(sys.argv[3])
-    elif len(sys.argv) == 5 and (sys.argv[1] == "-m" or sys.argv[1] == "--manual"):
+    elif len(sys.argv) == 3 and (sys.argv[1] == "-m" or sys.argv[1] == "--manual"):
         if validateIP(sys.argv[2]):
             inspector = Inspector()
             inspector.manualConnection(sys.argv[2])
