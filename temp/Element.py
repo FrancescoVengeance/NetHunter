@@ -3,16 +3,14 @@ import re
 from paramiko.channel import Channel
 from Link import Link
 import subprocess
-from utilities import *
-from utilities import ElementsManager
 
 class Element:
-    def __init__(self, hostname: str, ip: str, platform: str, capabilities: str, manager: ElementsManager):
+    def __init__(self, hostname: str, ip: str, platform: str, capabilities: str, manager):
         self.hostname: str = hostname
         self.ip: str = ip
         self.platform: str = platform
         self.capabilities: str = capabilities
-        self.manager: ElementsManager = manager
+        self.manager = manager
         self.macAddress: str = ""
         self.links: list[Link] = []
 
