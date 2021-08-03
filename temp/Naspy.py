@@ -41,8 +41,8 @@ class Naspy:
             captured = False
             elapsedTime = 0
             while not captured:
-                capture.sniff(packet_count=1, timeout=1)
-                elapsedTime += 1
+                capture.sniff(packet_count=1, timeout=2)
+                elapsedTime += 2
                 print(f"waiting for a packet... Elapsed time: {elapsedTime} seconds", end="\n")
                 if capture:
                     print("GOT IT")
