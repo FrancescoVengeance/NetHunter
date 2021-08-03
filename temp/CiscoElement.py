@@ -45,6 +45,7 @@ class CiscoElement(Element):
             return self.hostname
 
     def showCDP(self, shell: Channel) -> None:
+        print("loading CDP...")
         cdpBuffer = ""
         shell.send("show cdp neighbors detail\n")
         shell.send("\n")
@@ -61,6 +62,7 @@ class CiscoElement(Element):
             self.parseCDP(text)
 
     def parseCDP(self, text: str) -> None:
+        print("parsing CDP")
         strings = text.split("\n")
         hostname = ip = _from = to = platform = capabilities = ""
 
@@ -98,6 +100,7 @@ class CiscoElement(Element):
             else:
                 element = Element(hostname, ip, platform, capabilities, self.manager)
 
+            print(f"found {element.hostname}")
             self.manager.addElement(hostname, element)
 
         link = Link(_from, to, element)
