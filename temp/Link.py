@@ -1,8 +1,5 @@
-from Element import Element
-
-
 class Link:
-    def __init__(self, _from, to, element: Element):
+    def __init__(self, _from, to, element):
         self.to = to
         self._from = _from
         self.element = element
