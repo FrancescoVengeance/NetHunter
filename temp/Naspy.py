@@ -2,6 +2,8 @@ import difflib
 import json
 import pyshark
 from utilities import ElementsManager
+from CiscoElement import CiscoElement
+from Element import Element
 
 
 class Naspy:
@@ -21,12 +23,12 @@ class Naspy:
     def visit(self) -> None:
         found = True
         while self.manager.toVisit:
-            ip = self.manager.popToVisit()
-            element = self.manager.getElementByIp(ip)
+            element = self.manager.popToVisit()
+            # element = self.manager.getElementByIp(ip)
             hostname = element.connectionSSH(self.database)
-            if hostname:
+            if hostname != "":
                 found = True
-            self.manager.addElement(element.name, element)
+            self.manager.addToVisited(element)
 
         if found:
             # self.buildJSON()
@@ -48,7 +50,6 @@ class Naspy:
                     capture.eventloop.close()
 
             packet = capture[0]
-            rootElement = None
 
             if "cdp" in packet:
                 hostname = packet.cdp.deviceid.strip()
@@ -63,10 +64,12 @@ class Naspy:
 
             print(f"(root device) Device id: {hostname}, ip {ip}, capabilities {capabilities}, platform {platform}")
 
+            rootElement = None
             if "Cisco" in platform:
                 rootElement = CiscoElement(hostname, ip, capabilities, platform, self.manager)
             elif "EXOS" in platform:
-                rootElement = ExtremeElement(hostname, ip, capabilities, platform, self.manager)
+                pass
+                #rootElement = ExtremeElement(hostname, ip, capabilities, platform, self.manager)
             else:
                 rootElement = Element(hostname, ip, capabilities, platform, self.manager)
 
