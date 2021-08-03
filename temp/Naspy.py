@@ -75,6 +75,7 @@ class Naspy:
 
             self.manager.addElement(hostname, rootElement)
             self.manager.addToVisit(rootElement)
+            self.visit()
 
         finally:
             capture.eventloop.close()
