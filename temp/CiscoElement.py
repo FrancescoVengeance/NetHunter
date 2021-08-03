@@ -1,7 +1,8 @@
-from paramiko.channel import Channel
 from Element import *
 import paramiko
 import re
+from utilities import EntryNotFoundException, ElementException
+from paramiko import Channel
 
 
 class CiscoElement(Element):
@@ -117,6 +118,7 @@ class CiscoElement(Element):
 
     def getHostname(self, shell: Channel) -> None:
         #aggiustare anche inserendo il dominio
+        print("getting hostname...")
         shell.send("show running-config\n")
         shell.send("\n")
 
