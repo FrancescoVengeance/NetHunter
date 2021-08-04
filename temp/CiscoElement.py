@@ -119,7 +119,9 @@ class CiscoElement(Element):
         shell.send("\n")
 
         while not re.search(".*#\r\n.*#.*", buffer):
+            print("sono rincoglionito in questo loop...")
             if shell.recv_ready():
+                print("entrato nell'if del loop")
                 buffer += shell.recv(9999).decode("ascii")
 
         macTable = buffer.split("\n")
