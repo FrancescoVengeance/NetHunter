@@ -61,6 +61,7 @@ class CiscoElement(Element):
             self.parseCDP(text)
 
     def parseCDP(self, text: str) -> None:
+        print("parsing CDP...")
         strings = text.split("\n")
         hostname = ip = _from = to = platform = capabilities = ""
 
@@ -125,6 +126,7 @@ class CiscoElement(Element):
         self.parseMacTable(macTable)
 
     def parseMacTable(self, text: str):
+        print("parsing MAC table")
         singleOccurrences = []
 
         for i in range(len(text)):
@@ -166,6 +168,7 @@ class CiscoElement(Element):
             self.parseARP(line)
 
     def parseARP(self, text: str) -> None:
+        print("parsing arp table")
         text = re.compile("\s\s+").split(text)
         ip = text[0]
         mac = text[3]
