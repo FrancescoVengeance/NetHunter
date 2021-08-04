@@ -31,16 +31,8 @@ class Element:
 
     def connectionSSH(self, database: dict) -> str:
         print(f"trying to connect to {self.ip} \n unable to connect to SSH")
-        self.scanDevice()
+        self.getHostname()
         return ""
-
-    def scanDevice(self):
-        print(f"no information found for {self.ip}, trying port-scanning")
-        output = subprocess.run(["nmap", "-O", self.ip], stdout=subprocess.PIPE, text=True)
-        out = output.stdout.split("\n")
-        for line in out:
-            if re.search('OS details:(.*)', line):
-                self.hostname = re.search('OS details:(.*)', line).group(1).strip()
 
     def showCDP(self, shell: Channel) -> None:
         pass
@@ -67,4 +59,9 @@ class Element:
         pass
 
     def getHostname(self, shell: Channel) -> None:
-        pass
+        print(f"no information found for {self.ip}, trying port-scanning")
+        output = subprocess.run(["nmap", "-O", self.ip], stdout=subprocess.PIPE, text=True)
+        out = output.stdout.split("\n")
+        for line in out:
+            if re.search('OS details:(.*)', line):
+                self.hostname = re.search('OS details:(.*)', line).group(1).strip()

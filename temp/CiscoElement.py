@@ -36,6 +36,7 @@ class CiscoElement(Element):
             self.showArp(shell)
             self.showMacTable(shell)
 
+            shell.send("exit\r\n")
             print(f"links found for {self.hostname}({self.ip}): {len(self.links)}")
 
         except EntryNotFoundException:
@@ -45,14 +46,12 @@ class CiscoElement(Element):
             return self.hostname
 
     def showCDP(self, shell: Channel) -> None:
-        print("loading CDP...")
         cdpBuffer = ""
         shell.send("show cdp neighbors detail\n")
         shell.send("\n")
         while not re.search('.*#\r\n.*#.*', cdpBuffer):
             if shell.recv_ready():
-                response = shell.recv(9999).decode('ascii')
-                cdpBuffer += response
+                cdpBuffer += shell.recv(9999).decode('ascii')
 
         cdp = []
         if not re.search('.*CDP.*not.*', cdpBuffer):
@@ -62,7 +61,6 @@ class CiscoElement(Element):
             self.parseCDP(text)
 
     def parseCDP(self, text: str) -> None:
-        print("parsing CDP")
         strings = text.split("\n")
         hostname = ip = _from = to = platform = capabilities = ""
 
@@ -113,11 +111,69 @@ class CiscoElement(Element):
     def parseLLDP(self, shell: Channel) -> None:
         pass
 
-    def parseMacTable(self, shell: Channel):
-        pass
+    def showMacTable(self, shell: Channel) -> None:
+        buffer = ""
+        shell.send("show mac address-table")
+        shell.send("\n")
 
-    def parseARP(self, shell: Channel):
-        pass
+        while not re.search(".*#\r\n.*#.*", buffer):
+            if shell.recv_ready():
+                buffer += shell.recv(9999).decode("ascii")
+
+        macTable = buffer.split("\n")
+        macTable = macTable[6:(len(macTable) - 3)]
+        self.parseMacTable(macTable)
+
+    def parseMacTable(self, text: str):
+        singleOccurrences = []
+
+        for i in range(len(text)):
+            r1 = re.compile("\s\s+").split(text[i])
+            found = False
+            for j in range(len(text)):
+                r2 = re.compile("\s\s+").split(text[j])
+                if r1[4] == r2[4] and r1[2] != r2[2]:
+                    found = True
+            if not found:
+                singleOccurrences.append(r1)
+
+        element = None
+        link = None
+        for entry in singleOccurrences:
+            if self.manager.getElementByMac(entry[2]) is not None:
+                element = self.manager.getElementByMac(entry[2])
+                link = Link(entry[4].strip(), "Unknow", element)
+
+            if link not in self.links:
+                self.addLink(link)
+
+            if element not in self.manager.visited and element not in self.manager.toVisit:
+                self.manager.addToVisit(element)
+
+    def showArp(self, shell: Channel) -> None:
+        buffer = ""
+        shell.send("show ip arp\n")
+        shell.send("\n")
+
+        while not re.search(".*#\r\n.*#.*", buffer):
+            if shell.recv_ready():
+                buffer += shell.recv(9999).decode("ascii")
+
+        arpTable = buffer.split("\n")
+        arpTable = arpTable[2:(len(arpTable) - 2)]
+
+        for line in arpTable:
+            self.parseARP(line)
+
+    def parseARP(self, text: str) -> None:
+        text = re.compile("\s\s+").split(text)
+        ip = text[0]
+        mac = text[3]
+
+        element = self.manager.getElementByIp(ip)
+        if element == None:
+            element = Element("", ip, "", "", self.manager)
+        element.setMac(mac)
 
     def getHostname(self, shell: Channel) -> None:
         #aggiustare anche inserendo il dominio

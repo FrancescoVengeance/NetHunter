@@ -6,8 +6,6 @@ class ElementsManager:
     def __init__(self):
         self.toVisit: list[Element] = list()
         self.visited: list[Element] = list()
-        self.elementsByIp = dict()
-        self.elementsByMac = dict()
         self.elementsByHostname = dict()
         self.lock = RLock()
 
@@ -18,14 +16,6 @@ class ElementsManager:
     def addToVisited(self, element: Element):
         with self.lock:
             self.visited.append(element)
-
-    def addElementByIp(self, ip: str, element: Element):
-        with self.lock:
-            self.elementsByIp[ip] = element
-
-    def addElementByMac(self, mac: str, element: Element):
-        with self.lock:
-            self.elementsByMac[mac] = element
 
     def addElement(self, hostname: str, element: Element):
         with self.lock:
@@ -38,7 +28,19 @@ class ElementsManager:
 
     def getElementByIp(self, ip):
         with self.lock:
-            return self.elementsByIp[ip]
+            for key in self.elementsByHostname.keys():
+                if ip == self.elementsByHostname[key].ip:
+                    return self.elementsByHostname[key]
+
+            return None
+
+    def getElementByMac(self, mac):
+        with self.lock:
+            for key in self.elementsByHostname.keys():
+                if mac == self.elementsByHostname[key].mac:
+                    return self.elementsByHostname[key]
+
+            return None
 
     def getElementByHostname(self, hostname: str) -> Element:
         with self.lock:

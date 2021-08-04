@@ -62,7 +62,7 @@ class Naspy:
                 capabilities = packet.lldp.tlv_system_cap.strip()
                 platform = packet.lldp.tlv_system_desc.strip()
 
-            print(f"(root device) Device id: {hostname}, ip {ip}, capabilities {capabilities}, platform {platform}")
+            print(f"\n(root device) Device id: {hostname}, ip {ip}, capabilities {capabilities}, platform {platform}\n")
 
             rootElement = None
             if "Cisco" in platform:
