@@ -118,8 +118,8 @@ class CiscoElement(Element):
         shell.send("show mac address-table")
         shell.send("\n")
 
-        #resta inchiodato in questo while
-        print(re.search(".*#\r\n.*#.*", buffer).string + "buffer")
+        # resta inchiodato in questo while
+        # print(re.search(".*#\r\n.*#.*", buffer).string + "buffer")
         while not re.search(".*#\r\n.*#.*", buffer):
             if shell.recv_ready():
                 buffer += shell.recv(9999).decode("ascii")
