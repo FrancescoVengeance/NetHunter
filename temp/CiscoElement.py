@@ -107,7 +107,7 @@ class CiscoElement(Element):
         if link not in self.links:
             self.addLink(link)
 
-        if element not in self.manager.elementsByHostname and element not in self.manager.toVisit:
+        if element not in self.manager.visited and element not in self.manager.toVisit:
             self.manager.addToVisit(element)
 
     def parseLLDP(self, shell: Channel) -> None:
