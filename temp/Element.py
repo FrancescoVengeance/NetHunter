@@ -55,7 +55,7 @@ class Element:
     def showMacTable(self, shell: Channel) -> None:
         pass
 
-    def parseMacTable(self, text: str) -> None:
+    def parseMacTable(self, text: list) -> None:
         pass
 
     def getHostname(self, shell: Channel) -> None:

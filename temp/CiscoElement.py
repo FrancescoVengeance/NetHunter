@@ -125,7 +125,7 @@ class CiscoElement(Element):
         macTable = macTable[6:(len(macTable) - 3)]
         self.parseMacTable(macTable)
 
-    def parseMacTable(self, text: str):
+    def parseMacTable(self, text: list):
         print("parsing MAC table")
         singleOccurrences = []
 
@@ -174,7 +174,7 @@ class CiscoElement(Element):
         mac = text[3]
 
         element = self.manager.getElementByIp(ip)
-        if element == None:
+        if element is None:
             element = Element("", ip, "", "", self.manager)
         element.setMac(mac)
 
