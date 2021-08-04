@@ -166,6 +166,7 @@ class CiscoElement(Element):
 
         for line in arpTable:
             self.parseARP(line)
+        print("arp table finshed")
 
     def parseARP(self, text: str) -> None:
         print("parsing arp table")
