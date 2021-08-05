@@ -120,12 +120,14 @@ class CiscoElement(Element):
 
         # resta inchiodato in questo while
         # print(re.search(".*#\r\n.*#.*", buffer).string + "buffer")
-        while not re.search('.*#\r\n.*#.*', buffer):
+        '''while not re.search('.*#\r\n.*#.*', buffer):
             if shell.recv_ready():
-                buffer += shell.recv(9999).decode("ascii")
+                buffer += shell.recv(9999).decode("ascii")'''
 
+        buffer = shell.recv(9999).decode("ascii")
         macTable = buffer.split("\n")
         macTable = macTable[6:(len(macTable) - 3)]
+        print(macTable)
         self.parseMacTable(macTable)
 
     def parseMacTable(self, text: list):
@@ -147,7 +149,7 @@ class CiscoElement(Element):
         for entry in singleOccurrences:
             if self.manager.getElementByMac(entry[2]) is not None:
                 element = self.manager.getElementByMac(entry[2])
-                link = Link(entry[4].strip(), "Unknow", element)
+                link = Link(entry[4].strip(), "Unknown", element)
 
             if link not in self.links:
                 self.addLink(link)
