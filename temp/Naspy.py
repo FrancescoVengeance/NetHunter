@@ -3,6 +3,7 @@ import pyshark
 from utilities import ElementsManager
 from CiscoElement import CiscoElement
 from Element import Element
+import difflib
 
 
 class Naspy:
@@ -83,3 +84,79 @@ class Naspy:
 
         finally:
             capture.eventloop.close()
+
+    def buildJson(self) -> None:
+        firstNode = True
+        firstEdge = True
+        nodes = '{"nodes":[\n\t'
+        edges = '"edges":[\n\t'
+        cont = 0
+        computed = []
+
+        for hostname in sorted(self.manager.elementsByHostname):
+            if firstNode:
+                nodes += '{"id":"' + hostname + '", "label":"' + hostname + '","x":0,"y":0,"size":1,"mac":"' \
+                         + self.manager.getElementByHostname(hostname).macAddress + '"}'
+                firstNode = False
+            else:
+                nodes += ',\n\t{"id":"' + hostname + '", "label":"' + hostname + \
+                         '","x":0,"y":1,"size":1,"mac":"' + self.manager.getElementByHostname(hostname).macAddress + '"}'
+
+            for link in self.manager.getElementByHostname(hostname).links:
+                if (hostname, link.element.hostname) not in computed and (link.element.hostname, hostname) not in computed:
+                    if firstEdge:
+                        edges += '{"id":' + str(cont) + ', "source":"' + hostname + '", "target": "' + link.element.hostname \
+                                 + '","from":"' + link.fr + '", "to":"' + link.to + '"}'
+                        firstEdge = False
+                    else:
+                        edges += ',\n\t{"id":' + str(cont) + ', "source":"' + hostname + '", "target": "' + link.element.hostname \
+                                 + '","from":"' + link.fr + '", "to":"' + link.to + '"}'
+                    computed.append((hostname, link.element.hostname))
+                    cont += 1
+
+        nodes += '\n],'
+        edges += '\n]}'
+        s = nodes + edges
+        nF = s.split('\n')
+        with open('../naspy_module/Webpage/data.json') as f2:
+            oldFile = f2.read()
+
+        newElements = []
+        for line in list(
+                difflib.unified_diff(oldFile.split('\n'), nF, fromfile='oldFile', tofile='newFile', lineterm="\n"))[2:]:
+            end = 0
+            if line[len(line) - 1] == ',':
+                end = len(line) - 2
+            else:
+                end = len(line) - 1
+
+            if '{' in line:
+                if line[0] == '+':
+                    newElements.append(line[1:end] + ', "new":"true"}')
+                if line[0] == '-':
+                    newElements.append(line[1:end] + ', "new":"false"}')
+
+        toRemove = []
+        for i in range(len(newElements)):
+            je1 = json.loads(newElements[i])
+            if 'source' in je1:
+                toRemove.append(newElements[i])
+            for j in range(i + 1, len(newElements)):
+                je2 = json.loads(newElements[j])
+                if je1['id'] == je2['id'] and je1['new'] != je2['new']:
+                    if newElements[i] not in toRemove:
+                        toRemove.append(newElements[i])
+                    if newElements[j] not in toRemove:
+                        toRemove.append(newElements[j])
+
+        for i in toRemove:
+            if i in newElements:
+                newElements.remove(i)
+
+        diffFile = '{"items":[' + ",\n".join(newElements) + ']}'
+
+        with open('../naspy_module/Webpage/diff.json', 'w') as d:
+            d.write(diffFile)
+
+        with open('../naspy_module/Webpage/data.json', 'w') as file:
+            file.write("\n".join(nF))
