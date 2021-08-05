@@ -47,7 +47,6 @@ class Naspy:
                     print("GOT IT")
                     captured = True
                     capture.eventloop.close()
-                    capture.close()
 
             packet = capture[0]
 
