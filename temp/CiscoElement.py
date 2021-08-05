@@ -30,10 +30,19 @@ class CiscoElement(Element):
             shell.send(database[self.ip]['enable'] + "\n")
             shell.send("terminal length 0\n")
 
+            print("getting hostname...")
             self.getHostname(shell)
+
+            print("parsing CDP...")
             self.showCDP(shell)
+
+            print("parsing LLDP...")
             self.showLLDP(shell)
+
+            print("parsing ARP table...")
             self.showArp(shell)
+
+            print("parsing mac table...")
             self.showMacTable(shell)
 
             shell.send("exit\r\n")
@@ -61,7 +70,6 @@ class CiscoElement(Element):
             self.parseCDP(text)
 
     def parseCDP(self, text: str) -> None:
-        print("parsing CDP...")
         strings = text.split("\n")
         hostname = ip = _from = to = platform = capabilities = ""
 
@@ -113,25 +121,19 @@ class CiscoElement(Element):
         pass
 
     def showMacTable(self, shell: Channel) -> None:
-        print("starting mac table")
         buffer = ""
         shell.send("show mac address-table\n")
         shell.send("\n")
 
-        # resta inchiodato in questo while
-        # print(re.search(".*#\r\n.*#.*", buffer).string + "buffer")
         while not re.search('.*#\r\n.*#.*', buffer):
-            print(re.search('.*#\r\n.*#.*', buffer))
             if shell.recv_ready():
                 buffer += shell.recv(9999).decode("ascii")
 
         macTable = buffer.split("\n")
         macTable = macTable[6:(len(macTable) - 3)]
-        print(macTable)
         self.parseMacTable(macTable)
 
     def parseMacTable(self, text: list):
-        print("parsing MAC table")
         singleOccurrences = []
 
         for i in range(len(text)):
@@ -174,7 +176,6 @@ class CiscoElement(Element):
         print("arp table finshed")
 
     def parseARP(self, text: str) -> None:
-        print("parsing arp table")
         text = re.compile("\s\s+").split(text)
         ip = text[0]
         mac = text[3]
@@ -186,7 +187,6 @@ class CiscoElement(Element):
 
     def getHostname(self, shell: Channel) -> None:
         #aggiustare anche inserendo il dominio
-        print("getting hostname...")
         shell.send("show running-config\n")
         shell.send("\n")
 
