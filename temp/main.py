@@ -19,9 +19,9 @@ def usage() -> str:
     return f"usage: {sys.argv[0]} [-a | --auto] [-i | --interface]:\n" \
            f"trying to sniff a LLDP or CDP packet on selected interface and waits until\n" \
            f"it receives the packet\n\n" \
-           f"Example: {sys.argv[0]} -a -i eth0" \
+           f"Example: {sys.argv[0]} -a -i eth0\n" \
            f"{sys.argv[0]} [-m | --manual] IP:\n" \
-           f"Example {sys.argv[0]} -m 10.0.0.1" \
+           f"Example {sys.argv[0]} -m 10.0.0.1  " \
            f"connect directly to the specified IP address without sniffing anything\n"
 
 
