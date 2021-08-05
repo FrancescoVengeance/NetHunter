@@ -120,11 +120,11 @@ class CiscoElement(Element):
 
         # resta inchiodato in questo while
         # print(re.search(".*#\r\n.*#.*", buffer).string + "buffer")
-        '''while not re.search('.*#\r\n.*#.*', buffer):
+        while not re.search('.*#\r\n.*#.*', buffer):
+            print(re.search('.*#\r\n.*#.*', buffer))
             if shell.recv_ready():
-                buffer += shell.recv(9999).decode("ascii")'''
+                buffer += shell.recv(9999).decode("ascii")
 
-        buffer = shell.recv(9999).decode("ascii")
         macTable = buffer.split("\n")
         macTable = macTable[6:(len(macTable) - 3)]
         print(macTable)
