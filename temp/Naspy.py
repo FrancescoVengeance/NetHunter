@@ -1,4 +1,3 @@
-import difflib
 import json
 import pyshark
 from utilities import ElementsManager
@@ -34,20 +33,21 @@ class Naspy:
             # self.buildJSON()
             pass
 
-    async def sniff(self, interface: str):
+    def sniff(self, interface: str):
         capture = pyshark.LiveCapture(interface=interface, display_filter="cdp or lldp")
         try:
             print("start sniffing", end="\n")
             captured = False
             elapsedTime = 0
             while not captured:
-                await capture.sniff(packet_count=1, timeout=2)
+                capture.sniff(packet_count=1, timeout=2)
                 elapsedTime += 2
                 print(f"waiting for a packet... Elapsed time: {elapsedTime} seconds", end="\n")
                 if capture:
                     print("GOT IT")
                     captured = True
                     capture.eventloop.close()
+                    capture.close()
 
             packet = capture[0]
 
