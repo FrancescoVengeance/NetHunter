@@ -6,6 +6,4 @@ async def sniff():
     await naspy.sniff("eth0")
 
 
-if __name__ == "__main__":
-
-    sniff()
+await sniff()
