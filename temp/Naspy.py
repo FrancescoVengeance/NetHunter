@@ -160,5 +160,5 @@ class Naspy:
         with open('../naspy_module/Webpage/diff.json','w+') as d:
             d.write(diffFile)
 
-        with open('Webpage/data.json','w') as file:
+        with open('../naspy_module/Webpage/data.json','w') as file:
             file.write("\n".join(nF))
