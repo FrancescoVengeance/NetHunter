@@ -185,7 +185,7 @@ class CiscoElement(Element):
         element.setMac(mac)
 
     def getHostname(self, shell: Channel) -> None:
-        #aggiustare anche inserendo il dominio
+        # aggiustare anche inserendo il dominio
         shell.send("show running-config\n")
         shell.send("\n")
 

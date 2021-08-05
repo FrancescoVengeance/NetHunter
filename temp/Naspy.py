@@ -24,7 +24,6 @@ class Naspy:
         found = True
         while self.manager.toVisit:
             element = self.manager.popToVisit()
-            # element = self.manager.getElementByIp(ip)
             hostname = element.connectionSSH(self.database)
             if hostname != "":
                 found = True
@@ -74,7 +73,7 @@ class Naspy:
                 rootElement = CiscoElement(hostname, ip, capabilities, platform, self.manager)
             elif "EXOS" in platform:
                 pass
-                #rootElement = ExtremeElement(hostname, ip, capabilities, platform, self.manager)
+                # rootElement = ExtremeElement(hostname, ip, capabilities, platform, self.manager)
             else:
                 rootElement = Element(hostname, ip, capabilities, platform, self.manager)
 
@@ -99,8 +98,8 @@ class Naspy:
                          + self.manager.getElementByHostname(hostname).macAddress + '"}'
                 firstNode = False
             else:
-                nodes += ',\n\t{"id":"' + hostname + '", "label":"' + hostname + \
-                         '","x":0,"y":1,"size":1,"mac":"' + self.manager.getElementByHostname(hostname).macAddress + '"}'
+                nodes += ',\n\t{"id":"' + hostname + '", "label":"' + hostname + '","x":0,"y":1,"size":1,"mac":"' \
+                         + self.manager.getElementByHostname(hostname).macAddress + '"}'
 
             for link in self.manager.getElementByHostname(hostname).links:
                 if (hostname, link.element.hostname) not in computed and (link.element.hostname, hostname) not in computed:
@@ -120,31 +119,29 @@ class Naspy:
         nF = s.split('\n')
 
         with open('../naspy_module/Webpage/data.json') as f2:
-            oldFile=f2.read()
+            oldFile = f2.read()
 
-        newElements=[]
-        for line in list(difflib.unified_diff(oldFile.split('\n'), nF, fromfile='oldFile', tofile='newFile',lineterm="\n"))[2:]:
-            end=0
-            if line[len(line)-1]==',':
-                end=len(line)-2
+        newElements = []
+        for line in list(difflib.unified_diff(oldFile.split('\n'), nF, fromfile='oldFile', tofile='newFile', lineterm="\n"))[2:]:
+            if line[len(line)-1] == ',':
+                end = len(line)-2
             else:
-                end=len(line)-1
+                end = len(line)-1
 
             if '{' in line:
-                if line[0]=='+':
+                if line[0] == '+':
                     newElements.append(line[1:end]+', "new":"true"}')
-                if line[0]=='-':
+                if line[0] == '-':
                     newElements.append(line[1:end]+', "new":"false"}')
 
-
-        toRemove=[]
+        toRemove = []
         for i in range(len(newElements)):
-            je1=json.loads(newElements[i])
+            je1 = json.loads(newElements[i])
             if 'source' in je1:
                 toRemove.append(newElements[i])
-            for j in range (i+1,len(newElements)):
-                je2=json.loads(newElements[j])
-                if(je1['id']==je2['id'] and je1['new']!=je2['new']):
+            for j in range(i+1, len(newElements)):
+                je2 = json.loads(newElements[j])
+                if je1['id'] == je2['id'] and je1['new'] != je2['new']:
                     if newElements[i] not in toRemove:
                         toRemove.append(newElements[i])
                     if newElements[j] not in toRemove:
@@ -154,11 +151,15 @@ class Naspy:
             if i in newElements:
                 newElements.remove(i)
 
-        diffFile='{"items":['+",\n".join(newElements)+']}'
+        diffFile = '{"items":['+",\n".join(newElements)+']}'
 
-
-        with open('../naspy_module/Webpage/diff.json','w+') as d:
+        with open('../naspy_module/Webpage/diff.json', 'w+') as d:
             d.write(diffFile)
 
-        with open('../naspy_module/Webpage/data.json','w') as file:
+        with open('../naspy_module/Webpage/data.json', 'w') as file:
             file.write("\n".join(nF))
+
+    def manualConnection(self, ip: str):
+        first = CiscoElement("", ip, "", "", self.manager)
+        self.manager.addToVisit(first)
+        self.visit()
