@@ -36,7 +36,7 @@ class Naspy:
             for hostname in self.manager.elementsByHostname:
                 print(f"    [{count}]: {hostname}\n")
                 count += 1
-            # self.buildJSON()
+            self.buildJson()
             pass
 
     def sniff(self, interface: str):
