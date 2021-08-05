@@ -21,7 +21,7 @@ class Naspy:
         return database
 
     def visit(self) -> None:
-        found = True
+        found = False
         while self.manager.toVisit:
             element = self.manager.popToVisit()
             hostname = element.connectionSSH(self.database)
