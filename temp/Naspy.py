@@ -34,7 +34,7 @@ class Naspy:
             # self.buildJSON()
             pass
 
-    def sniff(self, interface: str):
+    async def sniff(self, interface: str):
         capture = pyshark.LiveCapture(interface=interface, display_filter="cdp or lldp")
         try:
             print("start sniffing", end="\n")
