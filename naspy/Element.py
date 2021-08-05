@@ -1,8 +1,11 @@
 import json
 import re
+
+import paramiko
 from paramiko.channel import Channel
 from Link import Link
 import subprocess
+
 
 class Element:
     def __init__(self, hostname: str, ip: str, platform: str, capabilities: str, manager):
@@ -31,7 +34,7 @@ class Element:
 
     def connectionSSH(self, database: dict) -> str:
         print(f"trying to connect to {self.ip} \n unable to connect to SSH")
-        self.getHostname()
+        self.getHostname(paramiko.SSHClient().invoke_shell())
         return ""
 
     def showCDP(self, shell: Channel) -> None:

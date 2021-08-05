@@ -1,7 +1,7 @@
 class Link:
     def __init__(self, _from, to, element):
         self.to = to
-        self._from = _from
+        self.fr = _from
         self.element = element
 
     def __eq__(self, other):
