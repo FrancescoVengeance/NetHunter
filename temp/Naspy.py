@@ -30,6 +30,11 @@ class Naspy:
             self.manager.addToVisited(element)
 
         if found:
+            print("\ndevice founded:")
+            count = 1
+            for hostname in self.manager.elementsByHostname:
+                print(f"    [{count}]: {hostname}\n")
+                count += 1
             # self.buildJSON()
             pass
 
