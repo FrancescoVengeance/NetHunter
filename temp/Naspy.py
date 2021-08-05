@@ -118,6 +118,7 @@ class Naspy:
         edges += '\n]}'
         s = nodes + edges
         nF = s.split('\n')
+
         with open('../naspy_module/Webpage/data.json') as f2:
             oldFile = f2.read()
 
@@ -138,6 +139,7 @@ class Naspy:
 
         toRemove = []
         for i in range(len(newElements)):
+            print(newElements[i] + " nuovo elemento")
             je1 = json.loads(newElements[i])
             if 'source' in je1:
                 toRemove.append(newElements[i])
