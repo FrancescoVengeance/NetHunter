@@ -115,7 +115,7 @@ class CiscoElement(Element):
     def showMacTable(self, shell: Channel) -> None:
         print("starting mac table")
         buffer = ""
-        shell.send("show mac address-table")
+        shell.send("show mac address-table\n")
         shell.send("\n")
 
         # resta inchiodato in questo while
