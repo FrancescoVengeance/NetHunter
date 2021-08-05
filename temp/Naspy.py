@@ -78,4 +78,3 @@ class Naspy:
 
         finally:
             capture.eventloop.close()
-            capture.close()

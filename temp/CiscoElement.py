@@ -7,7 +7,7 @@ from paramiko import Channel
 
 class CiscoElement(Element):
     def connectionSSH(self, database: dict) -> str:
-        print(f"trying to connect to: {self.ip}", end="\n")
+        print(f"\ntrying to connect to: {self.ip}", end="\n")
         client = paramiko.SSHClient()
 
         try:
@@ -107,7 +107,7 @@ class CiscoElement(Element):
             else:
                 element = Element(hostname, ip, platform, capabilities, self.manager)
 
-            print(f"found {element.hostname}")
+            print(f"    found {element.hostname}")
             self.manager.addElement(hostname, element)
 
         link = Link(_from, to, element)
@@ -173,7 +173,6 @@ class CiscoElement(Element):
 
         for line in arpTable:
             self.parseARP(line)
-        print("arp table finshed")
 
     def parseARP(self, text: str) -> None:
         text = re.compile("\s\s+").split(text)
