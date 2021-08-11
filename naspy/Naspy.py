@@ -104,7 +104,7 @@ class Naspy:
                          + self.manager.getElementByHostname(hostname).macAddress + '"}'
 
             for link in self.manager.getElementByHostname(hostname).links:
-                if (hostname, link.element.hostname) not in computed and (link.element.hostname, hostname) not in computed:
+                if link.element.hostname not in computed and link.element.hostname not in computed:
                     if firstEdge:
                         edges += '{"id":' + str(cont) + ', "source":"' + self.manager.elementsByHostname[hostname].ip \
                                  + '", "target": "' + link.element.ip \
