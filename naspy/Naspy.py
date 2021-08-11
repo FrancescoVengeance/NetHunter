@@ -105,7 +105,7 @@ class Naspy:
 
             for link in self.manager.getElementByHostname(hostname).links:
                 if (hostname, link.element.hostname) not in computed or (link.element.hostname, hostname) not in computed:
-                    print("entrato")
+                    print(f"entrato per {hostname}")
                     if firstEdge:
                         edges += '{"id":' + str(cont) + ', "source":"' + self.manager.elementsByHostname[hostname].ip \
                                  + '", "target": "' + link.element.ip \
