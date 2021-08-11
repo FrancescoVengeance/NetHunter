@@ -169,6 +169,7 @@ class CiscoElement(Element):
                 buffer += shell.recv(9999).decode("ascii")
 
         arpTable = buffer.split("\n")
+        print(f"tabella arp {arpTable}")
         arpTable = arpTable[2:(len(arpTable) - 2)]
 
         for line in arpTable:
