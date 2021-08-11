@@ -169,13 +169,13 @@ class CiscoElement(Element):
                 buffer += shell.recv(9999).decode("ascii")
 
         arpTable = buffer.split("\n")
-        print(f"tabella arp {arpTable}")
         arpTable = arpTable[2:(len(arpTable) - 2)]
 
         for line in arpTable:
             self.parseARP(line)
 
     def parseARP(self, text: str) -> None:
+        print("parsing arp")
         text = re.compile("\s\s+").split(text)
         ip = text[0]
         mac = text[3]
