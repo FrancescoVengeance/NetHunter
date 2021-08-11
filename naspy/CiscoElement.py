@@ -181,6 +181,7 @@ class CiscoElement(Element):
         mac = text[3]
 
         element = self.manager.getElementByIp(ip)
+        print(f"in arp table element : {element.hostname}")
         if element is None:
             element = Element("", ip, "", "", self.manager)
         element.setMac(mac)
