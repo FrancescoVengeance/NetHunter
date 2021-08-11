@@ -105,7 +105,7 @@ class Naspy:
 
             for link in self.manager.getElementByHostname(hostname).links:
                 string = ""
-                print(link.element.split("."))
+                print(link.element.hostname.split("."))
                 '''toAdd = link.element.hostname.split(".")
                 string = "." + toAdd[1] + "." + toAdd[2]'''
                 if (hostname + string, link.element.hostname) not in computed and (link.element.hostname, hostname + string) not in computed:
