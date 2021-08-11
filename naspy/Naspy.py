@@ -104,8 +104,10 @@ class Naspy:
                          + self.manager.getElementByHostname(hostname).macAddress + '"}'
 
             for link in self.manager.getElementByHostname(hostname).links:
-                toAdd = link.element.hostname.split(".")
-                string = "." + toAdd[1] + "." + toAdd[2]
+                string = ""
+                print(link.element.split("."))
+                '''toAdd = link.element.hostname.split(".")
+                string = "." + toAdd[1] + "." + toAdd[2]'''
                 if (hostname + string, link.element.hostname) not in computed and (link.element.hostname, hostname + string) not in computed:
                     if firstEdge:
                         edges += '{"id":' + str(cont) + ', "source":"' + self.manager.elementsByHostname[hostname].ip \
