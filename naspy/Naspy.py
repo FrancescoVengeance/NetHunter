@@ -96,12 +96,14 @@ class Naspy:
             if firstNode:
                 nodes += '{"id":"' + hostname + '", "label":"' + hostname \
                          + '","x":0,"y":0,"size":1,"mac":"' \
-                         + self.manager.getElementByHostname(hostname).macAddress + '"}'
+                         + self.manager.getElementByHostname(hostname).macAddress \
+                         + '", "ip":"' + self.manager.getElementByHostname(hostname).ip + '"}'
                 firstNode = False
             else:
                 nodes += ',\n\t{"id":"' + hostname + '", "label":"' \
                          + hostname + '","x":0,"y":1,"size":1,"mac":"' \
-                         + self.manager.getElementByHostname(hostname).macAddress + '"}'
+                         + self.manager.getElementByHostname(hostname).macAddress \
+                         + '", "ip":"' + self.manager.getElementByHostname(hostname).ip + '"}'
 
             for link in self.manager.getElementByHostname(hostname).links:
                 if (hostname, link.element.hostname) not in computed or (link.element.hostname, hostname) not in computed:
