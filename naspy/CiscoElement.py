@@ -184,6 +184,7 @@ class CiscoElement(Element):
             element = self.manager.getElementByIp(ip)
             if element is None:
                 element = Element("", ip, "", "", self.manager)
+            print(f"the mac is {mac}")
             element.setMac(mac)
         except Exception:
             traceback.print_exc()
