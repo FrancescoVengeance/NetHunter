@@ -175,11 +175,10 @@ class CiscoElement(Element):
             self.parseARP(line)
 
     def parseARP(self, text: str) -> None:
-        print("parsing arp")
         text = re.compile("\s\s+").split(text)
-        ip = text[0]
+        ip = text[1]
         mac = text[3]
-
+        print(f"ip: {ip} mac: {mac}")
         try:
             element = self.manager.getElementByIp(ip)
             if element is None:

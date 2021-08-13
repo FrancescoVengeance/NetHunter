@@ -27,7 +27,9 @@ class ElementsManager:
             return self.toVisit.pop(0)
 
     def getElementByIp(self, ip):
+        print("getElementByIp()")
         for key in self.elementsByHostname.keys():
+            print(f"if {ip} == {self.elementsByHostname[key].ip}")
             if ip == self.elementsByHostname[key].ip:
                 return self.elementsByHostname[key]
 
