@@ -178,15 +178,10 @@ class CiscoElement(Element):
         text = re.compile("\s\s+").split(text)
         ip = text[1]
         mac = text[3]
-        print(f"ip: {ip} mac: {mac}")
-        try:
-            element = self.manager.getElementByIp(ip)
-            if element is None:
-                element = Element("", ip, "", "", self.manager)
-            print(f"the mac is {mac} of {element.hostname}")
-            element.setMac(mac)
-        except Exception:
-            traceback.print_exc()
+        element = self.manager.getElementByIp(ip)
+        if element is None:
+            element = Element("", ip, "", "", self.manager)
+        element.setMac(mac)
 
 
     def getHostname(self, shell: Channel) -> None:
