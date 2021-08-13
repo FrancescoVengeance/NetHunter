@@ -106,7 +106,7 @@ class Naspy:
                          + '", "ip":"' + self.manager.getElementByHostname(hostname).ip + '"}'
 
             for link in self.manager.getElementByHostname(hostname).links:
-                if (hostname, link.element.hostname) not in computed or (link.element.hostname, hostname) not in computed:
+                if (hostname, link.element.hostname) not in computed and (link.element.hostname, hostname) not in computed:
                     print(f"entrato per {hostname}")
                     if firstEdge:
                         edges += '{"id":' + str(cont) + ', "source":"' + hostname \
@@ -141,8 +141,6 @@ class Naspy:
                 if line[0] == '-':
                     newElements.append(line[1:end]+', "new":"false"}')
 
-        for line in newElements:
-            print(line)
         toRemove = []
         for i in range(len(newElements)):
             je1 = json.loads(newElements[i])
