@@ -185,12 +185,12 @@
             res+='<tr>';
             if(f.isSource){
               var target=s.graph.nodes().filter(function(node){
-                  return node.ip==f.target;
+                  return node.id==f.target;
               });
               res+='<td>'+target[0].label+'</td><td>'+f.target+'</td><td>'+target[0].mac+'</td>';
             }else{
               var source=s.graph.nodes().filter(function(node){
-                  return node.ip==f.source;
+                  return node.id==f.source;
               });
               
               res+='<td>'+source[0].label+'</td><td>'+f.source+'</td><td>'+source[0].mac+'</td>';
