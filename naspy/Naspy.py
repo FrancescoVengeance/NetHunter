@@ -94,12 +94,12 @@ class Naspy:
 
         for hostname in sorted(self.manager.elementsByHostname):
             if firstNode:
-                nodes += '{"id":"' + self.manager.elementsByHostname[hostname].ip + '", "label":"' + hostname \
+                nodes += '{"id":"' + hostname + '", "label":"' + hostname \
                          + '","x":0,"y":0,"size":1,"mac":"' \
                          + self.manager.getElementByHostname(hostname).macAddress + '"}'
                 firstNode = False
             else:
-                nodes += ',\n\t{"id":"' + self.manager.elementsByHostname[hostname].ip + '", "label":"' \
+                nodes += ',\n\t{"id":"' + hostname + '", "label":"' \
                          + hostname + '","x":0,"y":1,"size":1,"mac":"' \
                          + self.manager.getElementByHostname(hostname).macAddress + '"}'
 
@@ -107,13 +107,13 @@ class Naspy:
                 if (hostname, link.element.hostname) not in computed or (link.element.hostname, hostname) not in computed:
                     print(f"entrato per {hostname}")
                     if firstEdge:
-                        edges += '{"id":' + str(cont) + ', "source":"' + self.manager.elementsByHostname[hostname].ip \
-                                 + '", "target": "' + link.element.ip \
+                        edges += '{"id":' + str(cont) + ', "source":"' + hostname \
+                                 + '", "target": "' + link.element.hostname \
                                  + '","from":"' + link.fr + '", "to":"' + link.to + '"}'
                         firstEdge = False
                     else:
-                        edges += ',\n\t{"id":' + str(cont) + ', "source":"' + self.manager.elementsByHostname[hostname].ip \
-                                 + '", "target": "' + link.element.ip \
+                        edges += ',\n\t{"id":' + str(cont) + ', "source":"' + hostname \
+                                 + '", "target": "' + link.element.hostname \
                                  + '","from":"' + link.fr + '", "to":"' + link.to + '"}'
                     computed.append((hostname, link.element.hostname))
                     cont += 1
