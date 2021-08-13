@@ -186,8 +186,8 @@ class CiscoElement(Element):
             if element is None:
                 element = Element("", ip, "", "", self.manager)
             element.setMac(mac)
-        except:
-            print("errore")
+        except Exception:
+            print(Exception.args)
 
     def getHostname(self, shell: Channel) -> None:
         # aggiustare anche inserendo il dominio
