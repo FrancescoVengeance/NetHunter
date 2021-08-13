@@ -201,7 +201,7 @@ class CiscoElement(Element):
                 break
             if re.search('hostname (.*)', line):
                 hostname = re.search('hostname (.*)', line).group(1).strip()
-            if re.search('ip domain name (.*)', line):
-                domain = re.search('ip domain name (.*)', line).group(1).strip()
+            if re.search('ip.*domain.*name (.*)', line):
+                domain = re.search('ip.*domain.*name (.*)', line).group(1).strip()
 
         self.hostname = hostname + "." + domain
