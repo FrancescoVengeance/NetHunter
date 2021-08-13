@@ -141,6 +141,7 @@ class Naspy:
                 if line[0] == '-':
                     newElements.append(line[1:end]+', "new":"false"}')
 
+        print(newElements)
         toRemove = []
         for i in range(len(newElements)):
             je1 = json.loads(newElements[i])
