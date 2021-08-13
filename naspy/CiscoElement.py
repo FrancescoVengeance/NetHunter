@@ -183,7 +183,7 @@ class CiscoElement(Element):
         try:
             element = self.manager.getElementByIp(ip)
             if element is None:
-                element = Element("", ip, "", "", self.manager)
+                element = CiscoElement("", ip, "", "", self.manager)
             print(f"the mac is {mac} of {element.hostname}")
             element.setMac(mac)
             self.manager.addToVisit(element)
