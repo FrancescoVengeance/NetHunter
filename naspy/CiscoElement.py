@@ -194,7 +194,14 @@ class CiscoElement(Element):
             if shell.recv_ready():
                 out += shell.recv(9999).decode("ascii")
 
+        hostname = ""
+        domain = ""
         for line in out.split("\n"):
-            if re.search('hostname (.*)', line):
-                self.hostname = re.search('hostname (.*)', line).group(1).strip()
+            if hostname != "" and domain != "":
                 break
+            if re.search('hostname (.*)', line):
+                hostname = re.search('hostname (.*)', line).group(1).strip()
+            if re.search('ip domain name (.*)', line):
+                domain = re.search('ip domain name (.*)', line).group(1).strip()
+
+        self.hostname = hostname + "." + domain
