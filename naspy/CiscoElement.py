@@ -180,11 +180,14 @@ class CiscoElement(Element):
         ip = text[0]
         mac = text[3]
 
-        element = self.manager.getElementByIp(ip)
-        print(f"in arp table element : {element.hostname}")
-        if element is None:
-            element = Element("", ip, "", "", self.manager)
-        element.setMac(mac)
+        try:
+            element = self.manager.getElementByIp(ip)
+            print(f"in arp table element : {element.hostname}")
+            if element is None:
+                element = Element("", ip, "", "", self.manager)
+            element.setMac(mac)
+        except:
+            print("errore")
 
     def getHostname(self, shell: Channel) -> None:
         # aggiustare anche inserendo il dominio
