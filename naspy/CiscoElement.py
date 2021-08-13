@@ -3,7 +3,7 @@ import paramiko
 import re
 from utilities import EntryNotFoundException, ElementException
 from paramiko import Channel
-
+import traceback
 
 class CiscoElement(Element):
     def connectionSSH(self, database: dict) -> str:
@@ -187,7 +187,8 @@ class CiscoElement(Element):
                 element = Element("", ip, "", "", self.manager)
             element.setMac(mac)
         except Exception:
-            print(Exception.args)
+            traceback.print_exc()
+
 
     def getHostname(self, shell: Channel) -> None:
         # aggiustare anche inserendo il dominio
