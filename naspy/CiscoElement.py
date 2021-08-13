@@ -185,7 +185,6 @@ class CiscoElement(Element):
                 element = CiscoElement("", ip, "", "", self.manager)
             print(f"the mac is {mac} of {element.hostname}")
             element.setMac(mac)
-            self.manager.addToVisit(element)
         except Exception:
             traceback.print_exc()
 
