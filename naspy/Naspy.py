@@ -33,7 +33,7 @@ class Naspy:
             print("\ndevice founded:")
             count = 1
             for hostname in self.manager.elementsByHostname:
-                print(f"    [{count}]: {hostname}\n")
+                print(f"    [{count}]: {hostname} | mac: {self.manager.elementsByHostname[hostname].mac}\n")
                 count += 1
             self.buildJson()
             pass
