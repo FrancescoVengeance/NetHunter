@@ -27,12 +27,13 @@ class ElementsManager:
             return self.toVisit.pop(0)
 
     def getElementByIp(self, ip):
-        with self.lock:
-            for key in self.elementsByHostname.keys():
-                if ip == self.elementsByHostname[key].ip:
-                    return self.elementsByHostname[key]
+        print("getElementByIp()")
+        for key in self.elementsByHostname.keys():
+            print(f"if {ip} == {self.elementsByHostname[key].ip}")
+            if ip == self.elementsByHostname[key].ip:
+                return self.elementsByHostname[key]
 
-            return None
+        return None
 
     def getElementByMac(self, mac):
         with self.lock:

@@ -3,7 +3,7 @@ import paramiko
 import re
 from utilities import EntryNotFoundException, ElementException
 from paramiko import Channel
-
+import traceback
 
 class CiscoElement(Element):
     def connectionSSH(self, database: dict) -> str:
@@ -176,13 +176,13 @@ class CiscoElement(Element):
 
     def parseARP(self, text: str) -> None:
         text = re.compile("\s\s+").split(text)
-        ip = text[0]
+        ip = text[1]
         mac = text[3]
-
         element = self.manager.getElementByIp(ip)
         if element is None:
             element = Element("", ip, "", "", self.manager)
         element.setMac(mac)
+
 
     def getHostname(self, shell: Channel) -> None:
         # aggiustare anche inserendo il dominio

@@ -33,7 +33,7 @@ class Naspy:
             print("\ndevice founded:")
             count = 1
             for hostname in self.manager.elementsByHostname:
-                print(f"    [{count}]: {hostname}\n")
+                print(f"    [{count}]: {hostname} | mac: {self.manager.elementsByHostname[hostname].macAddress}\n")
                 count += 1
             self.buildJson()
             pass
@@ -104,7 +104,8 @@ class Naspy:
                          + self.manager.getElementByHostname(hostname).macAddress + '"}'
 
             for link in self.manager.getElementByHostname(hostname).links:
-                if (hostname, link.element.hostname) not in computed and (link.element.hostname, hostname) not in computed:
+                if (hostname, link.element.hostname) not in computed or (link.element.hostname, hostname) not in computed:
+                    print(f"entrato per {hostname}")
                     if firstEdge:
                         edges += '{"id":' + str(cont) + ', "source":"' + self.manager.elementsByHostname[hostname].ip \
                                  + '", "target": "' + link.element.ip \
