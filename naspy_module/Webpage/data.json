@@ -1,0 +1,11 @@
+{"nodes":[
+  {"id":"Router1.francuzzu.com", "label":"Router1.francuzzu.com","x":0,"y":0,"size":1,"mac":"ca01.04ac.0008", "ip":"10.0.0.1", "new":"true"},
+  {"id":"Switch.francuzzu.com", "label":"Switch.francuzzu.com","x":0,"y":1,"size":1,"mac":"0cfc.2559.8001", "ip":"10.0.0.4", "new":"true"},
+  {"id":"Switch2.francuzzu.com", "label":"Switch2.francuzzu.com","x":0,"y":1,"size":1,"mac":"0cfc.25f7.8001", "ip":"10.0.2.3", "new":"true"}
+
+],"edges":[
+  {"id":0, "source":"Router1.francuzzu.com", "target": "Switch2.francuzzu.com","from":"GigabitEthernet1/0", "to":"GigabitEthernet0/0", "new":"true"},
+  {"id":1, "source":"Router1.francuzzu.com", "target": "Switch.francuzzu.com","from":"GigabitEthernet0/0", "to":"GigabitEthernet0/0", "new":"true"},
+  {"id":2, "source":"Switch.francuzzu.com", "target": "Router1.francuzzu.com","from":"GigabitEthernet0/0", "to":"GigabitEthernet0/0", "new":"true"},
+  {"id":3, "source":"Switch2.francuzzu.com", "target": "Router1.francuzzu.com","from":"GigabitEthernet0/0", "to":"GigabitEthernet1/0", "new":"true"}
+]}
