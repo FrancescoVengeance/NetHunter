@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>
-    Topology
-  </title>
+  <title>NetHunter</title>
 <style type="text/css">
     #graph {
       top: 10%;
@@ -88,26 +86,25 @@
 
 </div>
 
-
-
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-<script src="../src/sigma.min.js"></script>
-<script src="../src/plugins/sigma.parsers.json.min.js"></script>
-<script src="../src/plugins/sigma.plugins.dragNodes.min.js"></script>
-<script src="../src/plugins/sigma.renderers.edgeLabels.min.js"></script>
+
+{% load static %}
+<script src="{% static 'src/sigma.min.js' %}"></script>
+{% load static %}
+<script src="{% static 'src/plugins/sigma.parsers.json.min.js' %}"></script>
+{% load static %}
+<script src="{% static 'src/plugins/sigma.plugins.dragNodes.min.js' %}"></script>
+{% load static %}
+<script src="{% static 'src/plugins/sigma.renderers.edgeLabels.min.js' %}"></script>
 <script>
   $(document).ready(function(){
     var old=myItems["items"].filter(function(e){
-      return e.new=="false";
+      return e.new == "false";
     })
-    
-    
+
     if(old.length!=0)
       $('#oldElements').show();   
   
@@ -135,10 +132,12 @@
     });
   
   });
+
   var myItems;
-  
-  var s=sigma.parsers.json('data.json', {
-    renderer: {              
+
+  {% load static %}
+  var s=sigma.parsers.json("{% static 'data.json' %}", {
+    renderer: {
         container: 'graph',
         type: 'canvas'
     },
@@ -147,12 +146,12 @@
       edgeLabelSize: 'proportional',
       doubleClickEnabled: false
     } },
-    function(s) {      
-      
+    function(s) {
        var myItems;
 
+        {% load static %}
       $.ajax({
-        url: "diff.json",
+        url: "{% static 'diff.json' %}",
         async: false,
         cache: false,
         dataType: "text",
@@ -160,13 +159,10 @@
           myItems=JSON.parse(data);
         }
       });
-      
-      
-      
-      
+
       function click(e){
         var l=s.graph.edges().filter(function(edge){
-          
+
           if(edge.source==e.data.node.id){
               edge.isSource=true;
               return true
@@ -175,12 +171,12 @@
               return true;
           }return  false;
         });
-        
-        
+
+
         var res='IP='+e.data.node.ip+'<br>MAC='+e.data.node.mac;
         if(l.length>0){
           res+='<br><br><table class="table"><thead><tr><th scope="col">Connected to</th><th scope="col">IP</th><th scope="col">MAC</th><th scope="col">From</th><th scope="col">To</th></tr></thead><tbody>';
-          
+
           l.forEach(function(f){
             res+='<tr>';
             if(f.isSource){
@@ -192,12 +188,12 @@
               var source=s.graph.nodes().filter(function(node){
                   return node.id==f.source;
               });
-              
+
               res+='<td>'+source[0].label+'</td><td>'+source[0].ip+'</td><td>'+source[0].mac+'</td>';
             }
-            res+='<td>'+f.to+'</td><td>'+f.from+'</td></tr>';     
+            res+='<td>'+f.to+'</td><td>'+f.from+'</td></tr>';
           })
-            
+
           res+='</tbody></table>';
         }
         Swal.fire({
@@ -206,15 +202,15 @@
           confirmButtonText: 'OK',
           width: '60%'
         })
-      }      
-      
-      
-      
+      }
+
+
+
       s.bind('clickNode',click);
-      
+
       s.graph.nodes().forEach(function(node, i, a) {
-        
-        
+
+
         myItems["items"].forEach(function(e){
           if(node.id==e.id && e.new=="true"){
             node.color="#0F0"
@@ -222,28 +218,28 @@
         });
         node.x = Math.cos(Math.PI * 2 * i / a.length);
         node.y = Math.sin(Math.PI * 2 * i / a.length);
-        
-        
+
+
           $('#elements').append('<tr i="'+node.id+'" x="'+node.x+'" y="'+node.y+'"><td>'+node.label+'</td></tr>')
       });
       var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
-            
+
       dragListener.bind('drag',function(){
          setTimeout(function () {
              s.unbind('clickNode');
          });
        });
-           
+
       dragListener.bind('dragend',function(){
         setTimeout(function(){
           s.bind('clickNode', click);
         },250)
       });
-      
+
       var c = s.camera;
       var originalRatio=c.ratio;
       $('#plus').on('click',function(){
-        
+
 
          sigma.misc.animation.camera(c, {
           ratio: c.ratio / c.settings('zoomingRatio')
@@ -251,7 +247,7 @@
           duration: 200
         });
       });
-      
+
       $('#minus').on('click',function(){
         sigma.misc.animation.camera(c, {
           ratio: c.ratio * c.settings('zoomingRatio')
@@ -259,7 +255,7 @@
           duration: 200
         });
       });
-      
+
       $('#center').on('click',function(){
         sigma.misc.animation.camera(c, {
           ratio: originalRatio,
@@ -269,10 +265,10 @@
           duration: 200
         });
       });
-      
+
       $('#elements > tr').on('click',function(){
         console.log(parseFloat($(this).attr('x')))
-        
+
         sigma.misc.animation.camera(c, {
           ratio: originalRatio,
           x:parseFloat($(this).attr('x')),
@@ -280,11 +276,11 @@
         }, {
           duration: 200
         });
-        
+
       });
-    
-      
-      s.refresh();            
+
+
+      s.refresh();
   });
   
   
