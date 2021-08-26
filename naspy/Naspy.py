@@ -125,7 +125,7 @@ class Naspy:
         s = nodes + edges
         nF = s.split('\n')
 
-        with open('../naspy_module/Webpage/data.json') as f2:
+        with open('../templates/static/data.json') as f2:
             oldFile = f2.read()
 
         newElements = []
@@ -160,10 +160,10 @@ class Naspy:
 
         diffFile = '{"items":['+",\n".join(newElements)+']}'
 
-        with open('../naspy_module/Webpage/diff.json', 'w+') as d:
+        with open('../templates/static/diff.json', 'w+') as d:
             d.write(diffFile)
 
-        with open('../naspy_module/Webpage/data.json', 'w') as file:
+        with open('../templates/static/data.json', 'w') as file:
             file.write("\n".join(nF))
 
     def manualConnection(self, ip: str):
