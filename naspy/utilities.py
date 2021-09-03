@@ -1,5 +1,5 @@
 from threading import RLock
-from Element import Element
+from naspy.Element import Element
 
 
 class ElementsManager:

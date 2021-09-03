@@ -1,9 +1,11 @@
-from Element import *
 import paramiko
+from naspy.Element import Element
+from naspy.Link import Link
 import re
-from utilities import EntryNotFoundException, ElementException
+from naspy.utilities import EntryNotFoundException, ElementException
 from paramiko import Channel
 import traceback
+
 
 class CiscoElement(Element):
     def connectionSSH(self, database: dict) -> str:

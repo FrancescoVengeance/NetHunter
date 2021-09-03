@@ -1,9 +1,8 @@
 import json
 import re
-
 import paramiko
 from paramiko.channel import Channel
-from Link import Link
+from naspy.Link import Link
 import subprocess
 
 
