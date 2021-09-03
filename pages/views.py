@@ -3,9 +3,6 @@ from naspy.Naspy import Naspy
 
 
 def index_view(request, *args, **kwargs):
-    naspy = Naspy()
-    print("Start sniffing")
-    naspy.sniff("enp0s3")
     context = {}
     return render(request, "index.html", context)
 
