@@ -3,17 +3,19 @@ import pyshark
 from naspy.CiscoElement import *
 import difflib
 from naspy.utilities import *
+from pathlib import Path
 
 
 class Naspy:
     def __init__(self):
         self.manager = ElementsManager()
-        self.database = self.decryptDB()
+        self.BASE_DIR = Path(__file__).resolve().parent.parent
+        self.database = self.decryptDB(self.BASE_DIR)
 
     @staticmethod
-    def decryptDB() -> dict:
+    def decryptDB(base_dir) -> dict:
         print("Loading database...", end="\n")
-        with open("../naspy_module/hosts.db", "rb") as file:
+        with open(base_dir / "naspy_module/hosts.db", "rb") as file:
             data = file.read()
 
         database = json.loads(data.decode())
@@ -124,7 +126,7 @@ class Naspy:
         s = nodes + edges
         nF = s.split('\n')
 
-        with open('../templates/static/data.json') as f2:
+        with open(self.BASE_DIR / 'templates/static/data.json') as f2:
             oldFile = f2.read()
 
         newElements = []
@@ -159,10 +161,10 @@ class Naspy:
 
         diffFile = '{"items":['+",\n".join(newElements)+']}'
 
-        with open('../templates/static/diff.json', 'w+') as d:
+        with open(self.BASE_DIR / 'templates/static/diff.json', 'w+') as d:
             d.write(diffFile)
 
-        with open('../templates/static/data.json', 'w') as file:
+        with open(self.BASE_DIR / 'templates/static/data.json', 'w') as file:
             file.write("\n".join(nF))
 
     def manualConnection(self, ip: str):
