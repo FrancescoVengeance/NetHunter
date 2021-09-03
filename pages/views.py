@@ -10,4 +10,5 @@ def index_view(request, *args, **kwargs):
 def run(request, *args, **kwargs):
     if request.method == "POST":
         naspy = Naspy()
+        print("Start sniffing")
         naspy.sniff("enp0s3")
