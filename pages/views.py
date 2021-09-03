@@ -10,4 +10,4 @@ def index_view(request, *args, **kwargs):
 def run(request, *args, **kwargs):
     if request.method == "POST":
         naspy = Naspy()
-        naspy.sniff("enp0s8")
+        naspy.sniff("enp0s3")
