@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from naspy import Naspy
+from naspy.Naspy import Naspy
 
 
 def index_view(request, *args, **kwargs):
