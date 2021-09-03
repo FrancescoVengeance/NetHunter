@@ -46,7 +46,7 @@
   <nav class="navbar navbar-light bg-light">
     <span class="navbar-brand mb-0 h1">Topology</span>
   </nav>
-    <form action="." method="post">
+    <form action="." method="post"> {% csrf_token %}
         <button type="submit">Sniff</button>
     </form>
   <div class="row">
