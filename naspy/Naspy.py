@@ -1,10 +1,9 @@
 import json
 import pyshark
-from utilities import ElementsManager
 from CiscoElement import CiscoElement
 from Element import Element
 import difflib
-
+from utilities import *
 
 class Naspy:
     def __init__(self):
