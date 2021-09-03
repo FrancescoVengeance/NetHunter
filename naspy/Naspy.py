@@ -142,27 +142,27 @@ class Naspy:
                 if line[0] == '-':
                     newElements.append(line[1:end]+', "new":"false"}')
 
-        toRemove = []
-        for i in range(len(newElements)):
-            je1 = json.loads(newElements[i])
-            if 'source' in je1:
-                toRemove.append(newElements[i])
-            for j in range(i+1, len(newElements)):
-                je2 = json.loads(newElements[j])
-                if je1['id'] == je2['id'] and je1['new'] != je2['new']:
-                    if newElements[i] not in toRemove:
-                        toRemove.append(newElements[i])
-                    if newElements[j] not in toRemove:
-                        toRemove.append(newElements[j])
-
-        for i in toRemove:
-            if i in newElements:
-                newElements.remove(i)
-
-        diffFile = '{"items":['+",\n".join(newElements)+']}'
-
-        with open(self.BASE_DIR / 'templates/static/diff.json', 'w+') as d:
-            d.write(diffFile)
+        # toRemove = []
+        # for i in range(len(newElements)):
+        #     je1 = json.loads(newElements[i])
+        #     if 'source' in je1:
+        #         toRemove.append(newElements[i])
+        #     for j in range(i+1, len(newElements)):
+        #         je2 = json.loads(newElements[j])
+        #         if je1['id'] == je2['id'] and je1['new'] != je2['new']:
+        #             if newElements[i] not in toRemove:
+        #                 toRemove.append(newElements[i])
+        #             if newElements[j] not in toRemove:
+        #                 toRemove.append(newElements[j])
+        #
+        # for i in toRemove:
+        #     if i in newElements:
+        #         newElements.remove(i)
+        #
+        # diffFile = '{"items":['+",\n".join(newElements)+']}'
+        #
+        # with open(self.BASE_DIR / 'templates/static/diff.json', 'w+') as d:
+        #     d.write(diffFile)
 
         with open(self.BASE_DIR / 'templates/static/data.json', 'w') as file:
             file.write("\n".join(nF))
