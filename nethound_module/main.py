@@ -9,10 +9,10 @@ import pyshark
 def print_help():
     return "Usage: -i [interface], [-m [mode]], [-p [password]], [-h [help]]\n" \
            "mode options: \n" \
-           "arp: IDS system for ARP protocol." \
-           "dhcp: IDS system for Rogue DHCP Attack" \
-           "dns: IDS system for DNS Hijack Attack" \
-           "stp: Monitoring STP Status and eventually failure" \
+           "arp: IDS system for ARP protocol.\n" \
+           "dhcp: IDS system for Rogue DHCP Attack\n" \
+           "dns: IDS system for DNS Hijack Attack\n" \
+           "stp: Monitoring STP Status and eventually failure\n" \
            "default: When no other options are chosen this script will perform all modality\n" \
            "password: is the password use for decrypting switch credentials"
 
