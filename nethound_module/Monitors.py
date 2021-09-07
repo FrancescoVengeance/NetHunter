@@ -791,6 +791,7 @@ class STPMonitor:
         return False
 
     def print_to_log(self, msg):
-        if self.log.closed:
-            self.log = open('log.naspy', 'a')
-        self.log.write('%s - \n%s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
+        pass
+        # if self.log.closed:
+        #     self.log = open('log.naspy', 'a')
+        # self.log.write('%s - \n%s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
