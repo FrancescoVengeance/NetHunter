@@ -17,9 +17,7 @@ def print_help():
            "password: is the password use for decrypting switch credentials"
 
 
-password = None
-
-if __name__ == "__main__":
+def parse_args():
     if os.geteuid() != 0:
         print("You need to run as a root")
         print(print_help())
@@ -30,6 +28,28 @@ if __name__ == "__main__":
         print(print_help())
         sys.exit(0)
 
+    modalities = ["arp", "dhcp", "vlan", "stp", "dns"]
+
+    interface = None
     if "-i" in sys.argv:
         interface = sys.argv[sys.argv.index("-i") + 1]
         print(f"interface {interface}")
+    elif "-h" in sys.argv:
+        print(print_help())
+        sys.exit(0)
+
+    mode = "all"
+    if len(sys.argv) > 4 and "-m" in sys.argv:
+        mode = sys.argv[sys.argv.index("-m") + 1] if sys.argv[sys.argv.index("-m") + 1] in modalities else "all"
+        print(f"mode setted to {mode}")
+
+    password = None
+    if len(sys.argv) > 4 and "-p" in sys.argv:
+        password = sys.argv[sys.argv.index("-p") + 1]
+        print(f"password {password}")
+
+    return interface, mode, password
+
+
+if __name__ == "__main__":
+    interface, mode, password = parse_args()
