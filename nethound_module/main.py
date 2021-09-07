@@ -41,7 +41,7 @@ def parse_args():
     mode = "all"
     if len(sys.argv) > 4 and "-m" in sys.argv:
         mode = sys.argv[sys.argv.index("-m") + 1] if sys.argv[sys.argv.index("-m") + 1] in modalities else "all"
-        print(f"mode setted to {mode}")
+    print(f"mode setted to {mode}")
 
     password = None
     if len(sys.argv) > 4 and "-p" in sys.argv:
