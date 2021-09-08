@@ -124,9 +124,13 @@ if __name__ == "__main__":
             while True:
                 time.sleep(3)
                 if mode in ["dhcp", "all"]:
-                    threading.Thread(target=net_interface.send_dhcp_discover).start()
+                    dhcp_discover = threading.Thread(target=net_interface.send_dhcp_discover)
+                    dhcp_discover.start()
+                    dhcp_discover.join()
                 if mode in ["dns", "all"]:
-                    threading.Thread(target=net_interface.send_dns_query).start()
+                    dns_query = threading.Thread(target=net_interface.send_dns_query)
+                    dns_query.start()
+                    dns_query.join()
 
                 print("Start sniffing")
                 capture = pyshark.LiveCapture(interface=net_interface.interface)
@@ -160,8 +164,10 @@ if __name__ == "__main__":
 
                 # if è mezzanotte:
                 #   manda i log per mail
-    except (KeyboardInterrupt, RuntimeError, TypeError):
-        if topology_cng_packet is not None:
-            topology_cng_packet.close()
-        capture.eventloop.close()
-        print("BYE!")
+    # except (KeyboardInterrupt, RuntimeError, TypeError):
+    #     if topology_cng_packet is not None:
+    #         topology_cng_packet.close()
+    #     capture.eventloop.close()
+    #     print("BYE!")
+    finally:
+        pass
