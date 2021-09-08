@@ -114,7 +114,7 @@ if __name__ == "__main__":
             try:
                 capture.apply_on_packets(update_callback, timeout=net_interface.timeout)
             except concurrent.futures.TimeoutError:
-                # capture.close()
+                capture.close()
                 print("capture finished")
 
             stp_monitor.set_connected_interface_status(interface)

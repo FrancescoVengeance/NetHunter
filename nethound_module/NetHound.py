@@ -187,7 +187,7 @@ try:
             pass
             #sender = LogSender()
             #sender.send(daily_body_message, 'Daily Report!', attachment='log.naspy', att_type='filename')
-except (KeyboardInterrupt, RuntimeError, TypeError):
+except (KeyboardInterrupt, TypeError):
     if topology_cng_pkg is not None:
         topology_cng_pkg.eventloop.close()
     capture.eventloop.close()
