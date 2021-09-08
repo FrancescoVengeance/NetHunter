@@ -60,9 +60,10 @@ class RogueDHCPMonitor:
             self.print_to_log('No DHCP Servers found!')
 
     def print_to_log(self, msg):
-        if self.log.closed:
-            self.log = open('log.naspy', 'a')
-        self.log.write('%s - %s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
+        pass
+        # if self.log.closed:
+        #     self.log = open('log.naspy', 'a')
+        # self.log.write('%s - %s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
 
 
 class RogueDNSMonitor:
@@ -113,9 +114,10 @@ class RogueDNSMonitor:
             self.print_to_log('No DNS Servers found!')
 
     def print_to_log(self, msg):
-        if self.log.closed:
-            self.log = open('log.naspy', 'a')
-        self.log.write('%s - %s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
+        pass
+        # if self.log.closed:
+        #     self.log = open('log.naspy', 'a')
+        # self.log.write('%s - %s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
 
 
 class ArpMonitor:
@@ -242,9 +244,10 @@ class ArpMonitor:
             print("MAC: %s - IP: %s" % (mac, str(self.mac_arp_table[mac])[1:-1]))
 
     def print_to_log(self, msg):
-        if self.log.closed:
-            self.log = open('log.naspy', 'a')
-        self.log.write('%s - %s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
+        pass
+        # if self.log.closed:
+        #     self.log = open('log.naspy', 'a')
+        # self.log.write('%s - %s \n' % (datetime.now().strftime("%H:%M:%S"), msg))
 
 
 class STPMonitor:
