@@ -53,6 +53,7 @@ def parse_args():
 
     return interface, mode, password, timeout
 
+
 def update_callback(pkt):
     if mode == 'all':
         if pkt.highest_layer.upper() == 'ARP':
