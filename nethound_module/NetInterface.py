@@ -56,7 +56,7 @@ class NetInterface:
                         self.switch_MAC = pkt.eth.src
                     self.switch_interface = pkt.lldp.port_id
 
-        capt.eventloop.close()
+        # capt.eventloop.close()
         print("initial configurations done!")
 
     def ssh_connection(self):
