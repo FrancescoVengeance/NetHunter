@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
             print("start sniffing")
             try:
-                capture.apply_on_packets(update_callback, timeout=net_interface.timeout)
+                await capture.apply_on_packets(update_callback, timeout=net_interface.timeout)
             except concurrent.futures.TimeoutError:
                 capture.close()
                 print("capture finished")
