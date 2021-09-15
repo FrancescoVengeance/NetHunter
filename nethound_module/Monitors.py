@@ -387,7 +387,7 @@ class STPMonitor:
                         #sender = LogSender()
                         #sender.send(msg, 'Switch Spoofing Found!')
                         print(msg)
-                        self.log.write(msg)
+                        # self.log.write(msg)
             else:
                 for switch in self.switches_table:
                     if switch.contains(src) and switch.get_port(src).negotiation:
