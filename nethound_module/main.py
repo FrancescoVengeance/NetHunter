@@ -8,7 +8,7 @@ import pyshark
 
 
 def print_help():
-    return "Usage: -i [interface], [-m [mode]], [-p [password]], [-h [help]]\n" \
+    return "Usage: -i [interface], [-m [mode]], [-p [password]], [-t [timeout]] [-h [help]]\n" \
            "mode options: \n" \
            "arp: IDS system for ARP protocol.\n" \
            "dhcp: IDS system for Rogue DHCP Attack\n" \
