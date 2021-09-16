@@ -7,3 +7,5 @@ interface = sys.argv[1]
 packets = PacketsQueue()
 safe_print = SafePrint()
 dhcp = DHCPMonitor(interface, packets, safe_print)
+dhcp.start()
+dhcp.join()
