@@ -1,8 +1,8 @@
 from threading import Thread
 from time import sleep
-from ..nethound_module.network_elements.dhcp_server import DHCPServer
-from ..nethound_module.packets_queue import PacketsQueue
-from ..nethound_module.safe_print import SafePrint
+from nethound_module.network_elements.dhcp_server import DHCPServer
+from nethound_module.packets_queue import PacketsQueue
+from nethound_module.safe_print import SafePrint
 from scapy.arch import get_if_hwaddr, get_if_raw_hwaddr
 from scapy.layers.dhcp import BOOTP, DHCP
 from scapy.layers.inet import IP, UDP
