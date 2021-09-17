@@ -76,7 +76,10 @@ class DHCPMonitor(Thread):
 
     def run(self) -> None:
         while True:
-            self.send_dhcp_discover()
-            self.update_dhcp_servers(self.packets.pop("BOOTP"))
-            self.print_status()
-            sleep(3)
+            try:
+                self.send_dhcp_discover()
+                self.update_dhcp_servers(self.packets.pop("BOOTP"))
+                self.print_status()
+                sleep(3)
+            except KeyboardInterrupt:
+                return
