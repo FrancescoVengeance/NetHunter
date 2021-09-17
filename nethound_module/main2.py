@@ -10,5 +10,7 @@ if __name__ == '__main__':
     safe_print = SafePrint()
     sniffer = Sniffer(interface, packets)
     dhcp = DHCPMonitor(interface, packets, safe_print)
+    sniffer.start()
     dhcp.start()
     dhcp.join()
+    sniffer.join()
