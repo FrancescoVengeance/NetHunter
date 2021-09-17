@@ -11,6 +11,8 @@ class Sniffer(Thread):
         self.interface = interface
 
     def run(self) -> None:
-        capture = pyshark.LiveCapture(interface=self.interface)
-        for packet in capture.sniff_continuously(packet_count=1):
-            self.packets.put(packet)
+        while True:
+            capture = pyshark.LiveCapture(interface=self.interface)
+            for packet in capture.sniff_continuously(packet_count=1):
+                self.packets.put(packet)
+            sleep(0.5)

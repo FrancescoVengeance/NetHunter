@@ -14,6 +14,7 @@ class PacketsQueue:
 
             self.empty_condition.notifyAll()
             if self.buffer[0].highest_layer.upper() == packet_type:
+                print(f"Protocol {self.buffer[0].highest_layer.upper()}")
                 return self.buffer.pop(0)
 
     def put(self, packet) -> None:
