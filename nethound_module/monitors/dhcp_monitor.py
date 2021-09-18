@@ -20,16 +20,10 @@ class DHCPMonitor(Thread):
         self.safe_print: SafePrint = safe_print
 
     def update_dhcp_servers(self, packet: Packet):
-        # if packet.bootp.option_dhcp == "2":
-        #     ip = packet.bootp.option_dhcp_server_id
-        #     mac = packet.eth.src
-        if True:
-            ip = packet.layers
-            self.safe_print.print(f"DHCP {packet.dhcp.src}")
-            mac = packet.ip.src
-            subnet = "0.0.0.0"
-            # if "option_subnet_mask" in packet.bootp.field_names:
-            #     subnet = packet.bootp.option_subnet_mask
+        if packet.dhcp.option_dhcp == "2":
+            ip = packet.dhcp.option_dhcp_server_id
+            mac = packet.eth.src
+            subnet = packet.dhcp.option_subnet_mask
 
             if len(self.dhcp_servers) > 0:
                 found = False
@@ -62,7 +56,7 @@ class DHCPMonitor(Thread):
         else:
             message += "\n"
             for server in self.dhcp_servers:
-                message += f"\t\t{server.get_info()}\n"
+                message += f"\t{server.get_info()}\n"
 
         message += "#############################"
         self.safe_print.print(message)

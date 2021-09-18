@@ -19,4 +19,8 @@ class PacketsQueue:
 
     def put(self, packet) -> None:
         with self.lock:
-            self.buffer.append(packet)
+            if len(self.buffer) <= 100:
+                self.buffer.append(packet)
+            else:
+                self.buffer.clear()
+            print(f"buffer: {len(self.buffer)}")
