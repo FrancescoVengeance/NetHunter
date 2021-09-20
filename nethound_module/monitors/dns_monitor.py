@@ -1,16 +1,22 @@
 from threading import Thread
 from time import sleep
-from nethound_module.packets_queue import PacketsQueue
-from nethound_module.safe_print import SafePrint
-from nethound_module.network_elements.dns_server import DNServer
+from packets_buffer import PacketsBuffer
+from safe_print import SafePrint
+from network_elements.dns_server import DNServer
 from pyshark.packet.packet import Packet
+from scapy.arch import get_if_hwaddr
+from scapy.layers.l2 import Ether
+from scapy.layers.dns import DNS, DNSQR
+from scapy.layers.inet import IP, UDP
+from scapy.sendrecv import sendp
+from scapy.volatile import RandShort
 
 
 class DNSMonitor(Thread):
-    def __init__(self, interface: str, packets: PacketsQueue, safe_print: SafePrint):
+    def __init__(self, interface: str, packets: PacketsBuffer, safe_print: SafePrint):
         super().__init__()
         self.interface: str = interface
-        self.packets: PacketsQueue = packets
+        self.packets: PacketsBuffer = packets
         self.safe_print: SafePrint = safe_print
         self.dns_servers: [DNServer] = []
 
@@ -34,7 +40,8 @@ class DNSMonitor(Thread):
         server = DNServer(ip, mac, "home.it")
         self.dns_servers.append(server)
         message = f"New DHCP Server discovered!\n\t\t IP: {ip} | MAC: {mac} | Domain: {server.domain}"
-        self.safe_print(message)
+        # self.safe_print(message)
+        print(message)
 
     def increase_counter(self) -> None:
         for server in self.dns_servers:
@@ -53,6 +60,35 @@ class DNSMonitor(Thread):
                 message += f"\t{server.get_info()}\n"
 
         message += "#############################"
-        self.safe_print.print(message)
+        # self.safe_print.print(message)
+        print(message)
 
+    def send_dns_query(self) -> None:
+        self.safe_print.print("sending DNS query...")
+        mac = get_if_hwaddr(self.interface)
+        broadcast = "ff:ff:ff:ff:ff:ff"
+        destination_ip = "255.255.255.255"
 
+        dns_query = Ether(src=mac, dst=broadcast) / IP(dst=destination_ip) / UDP(sport=RandShort(), dport=53) / \
+            DNS(rd=1, qd=DNSQR(qname="google.it", qtype="A"))
+
+        sendp(dns_query, iface=self.interface, verbose=False, count=15, inter=0.5)
+
+    def run(self) -> None:
+        stop = False
+        while not stop:
+            try:
+                self.send_dns_query()
+                sleep(1)
+                # packet = self.packets.pop("DNS")
+                # count = 0
+                # while (packet is not None and packet.dns.flags_response != "1") or count > 6:
+                #     packet = self.packets.pop("DNS")
+                #     count += 1
+                packet = self.packets.pop("DNS")
+                if packet is not None:
+                    self.update_dns_servers(packet)
+                self.print_status()
+                sleep(2)
+            except KeyboardInterrupt:
+                stop = True

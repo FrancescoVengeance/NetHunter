@@ -1,9 +1,10 @@
 from threading import RLock, Condition
+from pyshark.packet.packet import Packet
 
 
-class PacketsQueue:
+class PacketsBuffer:
     def __init__(self):
-        self.buffer: list = []
+        self.buffer: [Packet] = []
         self.lock: RLock = RLock()
         self.empty_condition: Condition = Condition(self.lock)
 
@@ -13,9 +14,12 @@ class PacketsQueue:
                 self.empty_condition.wait()
 
             self.empty_condition.notifyAll()
-            if self.buffer[0].highest_layer.upper() == packet_type:
-                print(f"Protocol {self.buffer[0].highest_layer.upper()}")
-                return self.buffer.pop(0)
+            print(f"Packet type {packet_type}")
+            for packet in self.buffer:
+                if packet.highest_layer.upper() == packet_type:
+                    pkg_to_return = packet
+                    self.buffer.remove(packet)
+                    return pkg_to_return
 
     def put(self, packet) -> None:
         with self.lock:

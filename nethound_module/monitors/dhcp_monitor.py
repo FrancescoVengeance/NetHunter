@@ -1,6 +1,6 @@
 from threading import Thread
 from time import sleep
-from packets_queue import PacketsQueue
+from packets_buffer import PacketsBuffer
 from network_elements.dhcp_server import DHCPServer
 from safe_print import SafePrint
 from scapy.arch import get_if_hwaddr, get_if_raw_hwaddr
@@ -12,11 +12,11 @@ from pyshark.packet.packet import Packet
 
 
 class DHCPMonitor(Thread):
-    def __init__(self, interface: str, packets: PacketsQueue, safe_print: SafePrint):
+    def __init__(self, interface: str, packets: PacketsBuffer, safe_print: SafePrint):
         super().__init__()
         self.interface: str = interface
         self.dhcp_servers: list[DHCPServer] = []
-        self.packets: PacketsQueue = packets
+        self.packets: PacketsBuffer = packets
         self.safe_print: SafePrint = safe_print
 
     def update_dhcp_servers(self, packet: Packet) -> None:
