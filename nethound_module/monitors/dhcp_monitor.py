@@ -19,7 +19,7 @@ class DHCPMonitor(Thread):
         self.packets: PacketsQueue = packets
         self.safe_print: SafePrint = safe_print
 
-    def update_dhcp_servers(self, packet: Packet):
+    def update_dhcp_servers(self, packet: Packet) -> None:
         if packet.dhcp.option_dhcp == "2":
             ip = packet.dhcp.option_dhcp_server_id
             mac = packet.eth.src
@@ -44,7 +44,7 @@ class DHCPMonitor(Thread):
 
     def increase_counter(self) -> None:
         for server in self.dhcp_servers:
-            if server.no_response_count > 2:
+            if server.no_response_count > 3:
                 self.safe_print.print(f"DHCP server [{server.ip}] is no longer available")
                 self.dhcp_servers.remove(server)
             server.increase_no_response_count()
@@ -78,6 +78,7 @@ class DHCPMonitor(Thread):
         while not stop:
             try:
                 self.send_dhcp_discover()
+                sleep(1)
                 packet = self.packets.pop("DHCP")
                 count = 0
                 while (packet is not None and packet.dhcp.option_dhcp != "2") or count > 6:
