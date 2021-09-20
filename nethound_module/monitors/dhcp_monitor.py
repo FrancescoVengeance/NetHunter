@@ -79,6 +79,10 @@ class DHCPMonitor(Thread):
             try:
                 self.send_dhcp_discover()
                 packet = self.packets.pop("DHCP")
+                count = 0
+                while (packet is not None and packet.dhcp.option_dhcp != "2") or count > 6:
+                    packet = self.packets.pop("DHCP")
+                    count += 1
                 if packet is not None:
                     self.update_dhcp_servers(packet)
                 self.print_status()

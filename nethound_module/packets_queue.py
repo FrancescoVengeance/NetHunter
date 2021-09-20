@@ -23,4 +23,3 @@ class PacketsQueue:
                 self.buffer.append(packet)
             else:
                 self.buffer.clear()
-            print(f"buffer: {len(self.buffer)}")
