@@ -14,7 +14,6 @@ class PacketsBuffer:
                 self.empty_condition.wait()
 
             self.empty_condition.notifyAll()
-            print(f"Packet type {packet_type}")
             for packet in self.buffer:
                 if packet.highest_layer.upper() == packet_type:
                     pkg_to_return = packet

@@ -37,9 +37,9 @@ class DNSMonitor(Thread):
                 self.add_new_dns_server(ip, mac)
 
     def add_new_dns_server(self, ip: str, mac: str) -> None:
-        server = DNServer(ip, mac, "home.it")
+        server = DNServer(ip, mac)
         self.dns_servers.append(server)
-        message = f"New DHCP Server discovered!\n\t\t IP: {ip} | MAC: {mac} | Domain: {server.domain}"
+        message = f"New DNS Server discovered!\n\t\t IP: {ip} | MAC: {mac}"
         # self.safe_print(message)
         print(message)
 
@@ -80,11 +80,6 @@ class DNSMonitor(Thread):
             try:
                 self.send_dns_query()
                 sleep(1)
-                # packet = self.packets.pop("DNS")
-                # count = 0
-                # while (packet is not None and packet.dns.flags_response != "1") or count > 6:
-                #     packet = self.packets.pop("DNS")
-                #     count += 1
                 packet = self.packets.pop("DNS")
                 if packet is not None:
                     self.update_dns_servers(packet)

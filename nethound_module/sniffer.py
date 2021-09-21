@@ -9,7 +9,7 @@ class Sniffer(Thread):
         super(Sniffer, self).__init__()
         self.packets = packets
         self.interface = interface
-        self.display_filter = "udp.srcport == 67 or udp.srcport == 53"
+        self.display_filter = "udp.srcport == 67 or udp.srcport == 53 or arp"
         self.capture = pyshark.LiveCapture(interface=self.interface, display_filter=self.display_filter)
 
     def run(self) -> None:
@@ -17,7 +17,6 @@ class Sniffer(Thread):
             count: int = 1
             for packet in self.capture.sniff_continuously():
                 if (count % 5) != 0:
-                    print("sniffing...")
                     self.packets.put(packet)
                 else:
                     sleep(8)
