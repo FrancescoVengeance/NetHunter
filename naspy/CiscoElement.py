@@ -8,29 +8,28 @@ import traceback
 
 
 class CiscoElement(Element):
+    def enable(self, shell: Channel, database: dict) -> None:
+        shell.send("en\n")
+        response = ""
+
+        while not re.search(".*Password.*", response):
+            if shell.recv_ready():
+                response = shell.recv(9999).decode("ascii")
+                if "Incomplete" in response:
+                    raise ElementException
+
+        shell.send(database[self.ip]['enable'] + "\n")
+        shell.send("terminal length 0\n")
+
     def connectionSSH(self, database: dict) -> str:
         print(f"\ntrying to connect to: {self.ip}", end="\n")
-        client = paramiko.SSHClient()
 
         try:
             if self.ip not in database:
                 raise EntryNotFoundException
 
-            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect(hostname=self.ip, username=database[self.ip]['username'],
-                           password=database[self.ip]["password"])
-            shell: Channel = client.invoke_shell()
-            shell.send("en\n")
-            response = ""
-
-            while not re.search(".*Password.*", response):
-                if shell.recv_ready():
-                    response = shell.recv(9999).decode("ascii")
-                    if "Incomplete" in response:
-                        raise ElementException
-
-            shell.send(database[self.ip]['enable'] + "\n")
-            shell.send("terminal length 0\n")
+            shell = self.get_connection(database)
+            self.enable(shell, database)
 
             print("getting hostname...")
             self.getHostname(shell)
@@ -53,7 +52,7 @@ class CiscoElement(Element):
         except EntryNotFoundException:
             print("unable to connect to SSH")
         finally:
-            client.close()
+            # client.close()
             return self.hostname
 
     def showCDP(self, shell: Channel) -> None:
@@ -184,7 +183,6 @@ class CiscoElement(Element):
         if element is None:
             element = Element("", ip, "", "", self.manager)
         element.setMac(mac)
-
 
     def getHostname(self, shell: Channel) -> None:
         # aggiustare anche inserendo il dominio

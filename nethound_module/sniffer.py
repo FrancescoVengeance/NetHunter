@@ -9,7 +9,7 @@ class Sniffer(Thread):
         super(Sniffer, self).__init__()
         self.packets = packets
         self.interface = interface
-        self.display_filter = "udp.srcport == 67 or udp.srcport == 53 or arp"
+        self.display_filter = "udp.srcport == 67 or udp.srcport == 53 or arp or cdp or lldp or stp"
         self.capture = pyshark.LiveCapture(interface=self.interface, display_filter=self.display_filter)
 
     def run(self) -> None:

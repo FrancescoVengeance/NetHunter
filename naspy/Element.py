@@ -16,6 +16,13 @@ class Element:
         self.macAddress: str = ""
         self.links: list[Link] = []
 
+    def get_connection(self, database: dict) -> Channel:
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(hostname=self.ip, username=database[self.ip]['username'],
+                       password=database[self.ip]["password"])
+        return client.invoke_shell()
+
     def __eq__(self, other) -> bool:
         return self.hostname == other.hostname
 
