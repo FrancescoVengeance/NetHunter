@@ -247,6 +247,7 @@ class SpanningTreeMonitor(Thread):
                         port.no_nego_count = 0
                         port.negotiation_rcvd = False
 
+    # da richiamare all'inizio di tutto
     def get_initial_information(self, packet: Packet):
         switch_ip = None
         switch_mac = None
@@ -277,4 +278,75 @@ class SpanningTreeMonitor(Thread):
                 sender_mac = self.calculate_sender_mac(packet.eth.src, packet.stp.port)
             else:
                 sender_mac = packet.eth.src
-                # da finire
+            packet_bridge_id = packet.eth.src
+            switch = self.get_switch(packet_bridge_id)
+            if switch is not None:
+                port = switch.get_port(sender_mac)
+                packet_vlan_id = packet.stp.root_ext if packet.stp.bridge_ext == "0" else packet.stp.bridge_ext
+                packet_root_id = packet.stp.root_hw
+                if (packet_vlan_id == 0 or packet_root_id == 0) and "type" in packet.eth.field_names and packet.eth.type == "0x00008100":
+                    packet_vlan_id = packet.vlan.id
+
+                if packet_vlan_id in self.switch_baseline:
+                    if packet_bridge_id == self.switch_baseline[packet_vlan_id].bridge_id:
+                        if self.port_in_baseline(port, packet_vlan_id):
+                            old_priority = self.switch_baseline[packet_vlan_id].priority
+                            topology_change = False
+                            if int(packet_vlan_id) + int(packet.stp.root_prio) != old_priority:
+                                topology_change = True
+                                switch.set_spanning_tree_priority(packet_vlan_id, packet.stp.root_prio)
+                                self.switch_baseline[packet_vlan_id].priority = int(packet_vlan_id) + int(packet.stp.root_prio)
+                                message = f"Bridge {packet_bridge_id} priority on vlan {packet_vlan_id} is changed" \
+                                          f" from {old_priority} to {int(packet_vlan_id) + int(packet.stp.root_prio)}"
+                                self.safe_print.print(message)
+
+                            old_root_bridge = self.switch_baseline[packet_vlan_id].root_bridge_id
+                            if packet_root_id != old_root_bridge:
+                                topology_change = True
+                                switch.set_spanning_tree_root_id(packet_vlan_id, packet_root_id)
+                                self.switch_baseline[packet_vlan_id].root_bridge_id = packet_root_id
+                                message = f"[WARNING] Root bridge change! the new root bridge of vlan {packet_vlan_id} " \
+                                          f"is {packet_root_id}"
+                                self.safe_print.print(message)
+                            if packet_vlan_id in port.pvlan_status:
+                                port_status = port.pvlan_status[packet_vlan_id]
+                                if port_status != "Designated":
+                                    switch.set_designated_port(sender_mac, packet_vlan_id, override=True)
+                                    switch.increase_port_tc_counter(packet_vlan_id, sender_mac)
+                                    message = f"Port {port.name} on vlan {packet_vlan_id} has switched its state from " \
+                                              f"{port_status} to designated"
+                                    self.safe_print.print(message)
+                                for bport in self.switch_baseline[packet_vlan_id].ports:
+                                    if port.mac == bport.mac:
+                                        self.switch_baseline[packet_vlan_id].ports.remove(bport)
+
+                            if topology_change:
+                                switch.increase_tc_counter(packet_vlan_id)
+                        elif packet_vlan_id not in port.pvlan_status:
+                            switch.set_designated_port(sender_mac, packet_vlan_id, priority=packet.stp.root_prio,
+                                                       b_id=packet_root_id, initialization=True)
+                            self.add_port_to_baseline(port.mac, packet_vlan_id)
+                            message = f"New vlan {packet_vlan_id} has added at this trunk port {port.name}"
+                            self.safe_print.print(message)
+
+                elif packet_vlan_id not in port.pvlan_status:
+                    switch.set_designated_port(sender_mac, packet_vlan_id, priority=packet.stp.root_prio,
+                                               b_id=packet_root_id, initialization=True)
+                    self.add_port_to_baseline(port.mac, packet_vlan_id)
+                    message = f"New vlan {packet_vlan_id} has added at this trunk port {port.name}"
+                    self.safe_print.print(message)
+        else:
+            sender_mac = packet.eth.src
+            # new trunk port discovered
+            if packet.highest_layer.upper() == "DTP":
+                self.discover_switch_spoofing(packet)
+                if packet.dtp.tas == "0x00000001" or packet.dtp.tos == "0x00000001":
+                    for switch in self.switches_table:
+                        if switch.contains(sender_mac) and not switch.get_port(sender_mac).trunk:
+                            message = f"[WARNING] Port {sender_mac} is not trunk"
+                            self.safe_print.print(message)
+                            switch.get_port(sender_mac).trunk = True
+                            for vlan in self.switch_baseline:
+                                for port in self.switch_baseline[vlan].ports:
+                                    if port.mac == sender_mac:
+                                        port.trunk = True
