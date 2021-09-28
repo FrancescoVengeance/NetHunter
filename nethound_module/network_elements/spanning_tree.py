@@ -1,4 +1,4 @@
-from port import Port
+from network_elements.port import Port
 
 
 class SpanningTree:

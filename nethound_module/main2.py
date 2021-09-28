@@ -1,7 +1,7 @@
 from monitors.dhcp_monitor import DHCPMonitor
 from monitors.dns_monitor import DNSMonitor
 from monitors.arp_monitor import ARPMonitor
-from nethound_module.monitors.spanning_tree_monitor import SpanningTreeMonitor
+from monitors.spanning_tree_monitor import SpanningTreeMonitor
 from safe_print import SafePrint
 from packets_buffer import PacketsBuffer
 import sys
@@ -9,23 +9,23 @@ from sniffer import Sniffer
 
 if __name__ == '__main__':
     interface = sys.argv[1]
-    packets = PacketsBuffer()
+    # packets = PacketsBuffer()
     safe_print = SafePrint()
 
-    sniffer = Sniffer(interface, packets)
-    dhcp = DHCPMonitor(interface, packets, safe_print)
-    dns = DNSMonitor(interface, packets, safe_print)
-    arp = ARPMonitor(packets, safe_print)
-    stp = SpanningTreeMonitor(packets, safe_print)
+    # sniffer = Sniffer(interface, packets)
+    # dhcp = DHCPMonitor(interface, packets, safe_print)
+    # dns = DNSMonitor(interface, packets, safe_print)
+    # arp = ARPMonitor(packets, safe_print)
+    stp = SpanningTreeMonitor(safe_print, interface)
 
-    arp.start()
-    sniffer.start()
-    dhcp.start()
-    dns.start()
+    # arp.start()
+    # sniffer.start()
+    # dhcp.start()
+    # dns.start()
     stp.start()
 
-    dhcp.join()
-    sniffer.join()
-    dns.join()
-    arp.join()
+    # dhcp.join()
+    # sniffer.join()
+    # dns.join()
+    # arp.join()
     stp.join()

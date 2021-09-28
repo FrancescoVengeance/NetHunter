@@ -21,6 +21,8 @@ class ARPMonitor(Thread):
         target_mac = packet.arp.dst_hw_mac
         target_ip = packet.arp.dst_proto_ipv4
 
+        # self.safe_print.print(f"sender {sender_mac} target {target_mac}")
+
         sender_vlan_id = 1
         target_vlan_id = 1
 

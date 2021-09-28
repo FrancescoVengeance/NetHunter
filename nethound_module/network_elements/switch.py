@@ -1,5 +1,5 @@
-from port import Port
-from spanning_tree import SpanningTree
+from network_elements.port import Port
+from network_elements.spanning_tree import SpanningTree
 
 
 class Switch:
