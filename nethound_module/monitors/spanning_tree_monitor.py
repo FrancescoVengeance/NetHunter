@@ -5,7 +5,7 @@ from pyshark.packet.packet import Packet
 from safe_print import SafePrint
 import pyshark
 from NetInterface import NetInterface
-from naspy.Naspy import Naspy
+# from naspy.Naspy import decryptDB
 
 
 class SpanningTreeMonitor(Thread):
@@ -104,8 +104,7 @@ class SpanningTreeMonitor(Thread):
             if ssh_connector is None:
                 return False, None
 
-            naspy = Naspy()
-            credentials = naspy.decryptDB(self.BASE_DIR)
+            credentials = decryptDB(self.BASE_DIR)
             switch_ip = self.connected_switch["ip"]
             connected = ssh_connector.connect(switch_ip, credentials[switch_ip]["username"], credentials[switch_ip]["password"],
                                               credentials[switch_ip]["enable"], 5)
