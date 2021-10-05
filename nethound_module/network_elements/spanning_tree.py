@@ -11,7 +11,7 @@ class SpanningTree:
         self.root_bridge: bool = False
         self.topology_changes_counter: int = 0
 
-    def get_blocked_ports(self) -> list[Port]:
+    def get_blocked_ports(self) -> list:
         ports = []
         for port in self.ports:
             if port.pvlan_status[self.vlan_id] == "Blocked":
