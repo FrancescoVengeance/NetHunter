@@ -121,6 +121,22 @@ class NetInterface:
 
         return None
 
+    def get_ssh_module_by_mac(self, mac: str, connected_interface: str):
+        vendor = None
+        vendors = self.read_vendors()
+        if str(mac[:8]) in vendors:
+            vendor = vendors[str(mac[:8])]
+        else:
+            return None
+
+        if 'Extreme' in vendor:
+            return ExtremeSSH(connected_interface, 15, mac)
+        if 'Cisco' in vendor:
+            return CiscoSSH(connected_interface, 15)
+
+        return None
+
+
     def enable_monitor_mode(self):
         if self.ssh is not None:
             self.ssh.enable_monitor_mode()
