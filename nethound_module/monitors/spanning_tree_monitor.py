@@ -5,7 +5,7 @@ from pyshark.packet.packet import Packet
 from safe_print import SafePrint
 import pyshark
 from NetInterface import NetInterface
-# from naspy.Naspy import decryptDB
+from naspy.Naspy import decryptDB
 
 
 class SpanningTreeMonitor(Thread):
