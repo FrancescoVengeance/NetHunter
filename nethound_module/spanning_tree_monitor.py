@@ -94,7 +94,11 @@ class SpanningTreeMonitor(Thread):
                 else:
                     self.connected_switch["mac"] = packet.eth.src
 
-            message = self.start_message + "\n" + "Initial configuration done!\n" + self.end_message
+            message = self.start_message + "[!] Switch found!\n" \
+                                           f"  IP: {self.connected_switch['ip']}\n" \
+                                           f"  MAC: {self.connected_switch['mac']}\n" \
+                                           f"  INTERFACE {self.connected_switch['interface']}\n" + self.end_message
+
             self.safe_print.print(message)
 
     def connect_switch(self) -> tuple:
