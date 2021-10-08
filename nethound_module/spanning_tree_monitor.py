@@ -99,7 +99,7 @@ class SpanningTreeMonitor(Thread):
 
             self.safe_print.print(message)
 
-    def connect_switch(self) -> tuple:
+    def connect_switch(self):
         if "ip" in self.connected_switch and self.connected_switch["ip"] is not None:
             message = self.start_message + f"Connecting to {self.connected_switch['ip']}\n" + self.end_message
             self.safe_print.print(message)
