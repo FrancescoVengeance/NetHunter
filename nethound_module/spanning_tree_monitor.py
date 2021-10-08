@@ -112,8 +112,11 @@ class SpanningTreeMonitor(Thread):
 
             credentials = self.decryptDB(self.BASE_DIR)
             switch_ip = self.connected_switch["ip"]
-            connected = ssh_connector.connect(switch_ip, credentials[switch_ip]["username"], credentials[switch_ip]["password"],
-                                              credentials[switch_ip]["enable"], 5)
+            username = credentials[switch_ip]["username"]
+            password = credentials[switch_ip]["password"]
+            enable = credentials[switch_ip]["enable"]
+            self.safe_print.print(f"{switch_ip} {username} {password} {enable}")
+            connected = ssh_connector.connect(switch_ip, username, password, enable, max_attempts=5)
 
             return connected, ssh_connector
 
