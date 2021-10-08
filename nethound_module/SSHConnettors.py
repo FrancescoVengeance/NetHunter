@@ -20,7 +20,8 @@ class CiscoSSH:
         attempts = 0
         while attempts < max_attempts:
             try:
-                self.child = pexpect.spawn("ssh %s@%s" % (name, ip))
+                algorithm  = "-oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc"
+                self.child = pexpect.spawn(f"ssh {algorithm} %s@%s" % (name, ip))
                 self.child.timeout = 15
                 self.child.expect('Password:')
                 self.child.sendline(pwd)
