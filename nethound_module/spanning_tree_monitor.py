@@ -32,9 +32,7 @@ class SpanningTreeMonitor(Thread):
         if self.initialization:
             self.wait_for_initial_information(packet)
 
-        # connected, ssh_connector = self.connect_switch()
-        connected = False
-        ssh_connector = None
+        connected, ssh_connector = self.connect_switch()
         if connected and ssh_connector is not None:
             self.add_switch(ssh_connector.take_interfaces())
             message = self.start_message + "Enabling monitor mode\n" + self.end_message
