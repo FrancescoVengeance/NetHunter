@@ -107,7 +107,6 @@ class SpanningTreeMonitor(Thread):
             net_interface = NetInterface(self.interface)
             ssh_connector = net_interface.get_ssh_module_by_mac(self.connected_switch["mac"], self.connected_switch["interface"])
             if ssh_connector is None:
-                self.safe_print.print("sto ritornando none")
                 return False, None
 
             credentials = self.decryptDB(self.BASE_DIR)
@@ -116,6 +115,8 @@ class SpanningTreeMonitor(Thread):
                                               credentials[switch_ip]["enable"], 5)
 
             return connected, ssh_connector
+
+        return False, None
 
     @staticmethod
     def decryptDB(base_dir) -> dict:
