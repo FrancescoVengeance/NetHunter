@@ -31,13 +31,12 @@ class SpanningTreeMonitor(Thread):
     def callback(self, packet: Packet) -> None:
         if self.initialization:
             self.wait_for_initial_information(packet)
-
-        connected, ssh_connector = self.connect_switch()
-        if connected and ssh_connector is not None:
-            self.add_switch(ssh_connector.take_interfaces())
-            message = self.start_message + "Enabling monitor mode\n" + self.end_message
-            self.safe_print.print(message)
-            ssh_connector.enable_monitor_mode()
+            connected, ssh_connector = self.connect_switch()
+            if connected and ssh_connector is not None:
+                self.add_switch(ssh_connector.take_interfaces())
+                message = self.start_message + "Enabling monitor mode\n" + self.end_message
+                self.safe_print.print(message)
+                ssh_connector.enable_monitor_mode()
 
         self.update_switches_table(packet)
         self.discover_vlan_hopping(packet)
