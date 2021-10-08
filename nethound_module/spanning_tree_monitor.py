@@ -105,7 +105,8 @@ class SpanningTreeMonitor(Thread):
             self.safe_print.print(message)
 
             net_interface = NetInterface(self.interface)
-            ssh_connector = net_interface.get_ssh_module_by_mac(self.connected_switch["mac"], self.connected_switch["interface"])
+            # ssh_connector = net_interface.get_ssh_module_by_mac(self.connected_switch["mac"][:8], self.connected_switch["interface"])
+            ssh_connector = net_interface.get_cisco_ssh_module(self.connected_switch["interface"])
             if ssh_connector is None:
                 return False, None
 

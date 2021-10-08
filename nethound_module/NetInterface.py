@@ -121,6 +121,9 @@ class NetInterface:
 
         return None
 
+    def get_cisco_ssh_module(self, connected_interface: str):
+        return CiscoSSH(connected_interface, 15)
+
     def get_ssh_module_by_mac(self, mac: str, connected_interface: str):
         vendor = None
         vendors = self.read_vendors()
