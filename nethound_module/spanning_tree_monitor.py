@@ -25,6 +25,7 @@ class SpanningTreeMonitor(Thread):
         self.end_message = "#####################"
 
     def run(self) -> None:
+        self.safe_print.print("[STP MONITOR] Start sniffing...")
         self.capture.apply_on_packets(callback=self.callback)
 
     def callback(self, packet: Packet) -> None:
