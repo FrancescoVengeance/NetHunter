@@ -2,7 +2,7 @@ from threading import Thread
 from time import sleep
 from packets_buffer import PacketsBuffer
 from safe_print import SafePrint
-from network_elements.dns_server import DNServer
+from nethound_module.dns_server import DNServer
 from pyshark.packet.packet import Packet
 from scapy.arch import get_if_hwaddr
 from scapy.layers.l2 import Ether

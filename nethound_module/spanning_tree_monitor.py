@@ -1,17 +1,17 @@
+import json
 from pathlib import Path
 from threading import Thread
-from network_elements.switch import Switch, Port
+from switch import Switch
 from pyshark.packet.packet import Packet
 from safe_print import SafePrint
 import pyshark
 from NetInterface import NetInterface
-# from naspy.Naspy import decryptDB
 
 
 class SpanningTreeMonitor(Thread):
     def __init__(self, safe_print: SafePrint, interface: str):
         super().__init__()
-        self.BASE_DIR = Path(__file__).resolve().parent.parent.parent
+        self.BASE_DIR = Path(__file__).resolve().parent.parent
         self.switches_table: [Switch] = []
         self.switch_baseline: dict = {}
         self.waiting_timer: int = 0
@@ -31,7 +31,9 @@ class SpanningTreeMonitor(Thread):
         if self.initialization:
             self.wait_for_initial_information(packet)
 
-        connected, ssh_connector = self.connect_switch()
+        # connected, ssh_connector = self.connect_switch()
+        connected = False
+        ssh_connector = None
         if connected and ssh_connector is not None:
             self.add_switch(ssh_connector.take_interfaces())
             message = self.start_message + "Enabling monitor mode\n" + self.end_message
@@ -104,9 +106,18 @@ class SpanningTreeMonitor(Thread):
             if ssh_connector is None:
                 return False, None
 
-            credentials = decryptDB(self.BASE_DIR)
+            credentials = self.decryptDB(self.BASE_DIR)
             switch_ip = self.connected_switch["ip"]
             connected = ssh_connector.connect(switch_ip, credentials[switch_ip]["username"], credentials[switch_ip]["password"],
                                               credentials[switch_ip]["enable"], 5)
 
             return connected, ssh_connector
+
+    @staticmethod
+    def decryptDB(base_dir) -> dict:
+        print("Loading database...", end="\n")
+        with open(base_dir / "naspy_module/hosts.db", "rb") as file:
+            data = file.read()
+
+        database = json.loads(data.decode())
+        return database
