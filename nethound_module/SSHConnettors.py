@@ -55,7 +55,8 @@ class CiscoSSH:
     def connect_with_no_host_auth(self, ip, name, pwd, en_pwd):
         print("I'm trying to acknowledge the authenticity of the new host")
         try:
-            self.child = pexpect.spawn("ssh %s@%s" % (name, ip))
+            algorithm = "-oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc"
+            self.child = pexpect.spawn(f"ssh {algorithm} %s@%s" % (name, ip))
             self.child.expect('The authenticity of host')
             self.child.sendline('yes')
             self.child.expect('Password:')
