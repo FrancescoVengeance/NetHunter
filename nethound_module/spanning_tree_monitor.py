@@ -116,8 +116,8 @@ class SpanningTreeMonitor(Thread):
             password = credentials[switch_ip]["password"]
             enable = credentials[switch_ip]["enable"]
             self.safe_print.print(f"{switch_ip} {username} {password} {enable}")
-            connected = ssh_connector.connect(switch_ip, username, password, enable, max_attempts=5)
-
+            # connected = ssh_connector.connect(switch_ip, username, password, enable, max_attempts=5)
+            connected = ssh_connector.connect_with_no_host_auth(switch_ip, username, password, enable)
             return connected, ssh_connector
 
         return False, None

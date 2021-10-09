@@ -1,5 +1,4 @@
 from builtins import print
-
 import pexpect
 import re
 from NetworkElements import Switch
@@ -20,7 +19,7 @@ class CiscoSSH:
         attempts = 0
         while attempts < max_attempts:
             try:
-                algorithm  = "-oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc"
+                algorithm = "-oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc"
                 self.child = pexpect.spawn(f"ssh {algorithm} %s@%s" % (name, ip))
                 self.child.timeout = 15
                 self.child.expect('Password:')
