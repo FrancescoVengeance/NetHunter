@@ -4,6 +4,7 @@ import re
 from NetworkElements import Switch
 from NetworkElements import Port
 import os
+import traceback
 
 
 class CiscoSSH:
@@ -73,6 +74,7 @@ class CiscoSSH:
             return True
         except (pexpect.EOF, pexpect.TIMEOUT):
             print("\n\n>>>>>>>>>>>CONNECTION ERROR<<<<<<<<<<<\n\n")
+            print(traceback.format_exc())
             self.child.close()
             return False
 
