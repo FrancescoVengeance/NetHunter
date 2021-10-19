@@ -1,7 +1,7 @@
+import time
 from threading import Thread
-from time import sleep
-from packets_buffer import PacketsBuffer
-from nethound_module.dhcp_server import DHCPServer
+import pyshark
+from dhcp_server import DHCPServer
 from safe_print import SafePrint
 from scapy.arch import get_if_hwaddr, get_if_raw_hwaddr
 from scapy.layers.dhcp import BOOTP, DHCP
@@ -12,12 +12,14 @@ from pyshark.packet.packet import Packet
 
 
 class DHCPMonitor(Thread):
-    def __init__(self, interface: str, packets: PacketsBuffer, safe_print: SafePrint):
+    def __init__(self, interface: str, safe_print: SafePrint, timeout: int = 10):
         super().__init__()
         self.interface: str = interface
+        self.timeout = timeout
         self.dhcp_servers: list[DHCPServer] = []
-        self.packets: PacketsBuffer = packets
         self.safe_print: SafePrint = safe_print
+        self.display_filter = "dhcp"  # for dhcp offer
+        self.capture = pyshark.LiveCapture(interface=self.interface, display_filter=self.display_filter)
 
     def update_dhcp_servers(self, packet: Packet) -> None:
         if packet.dhcp.option_dhcp == "2":
@@ -62,27 +64,26 @@ class DHCPMonitor(Thread):
         self.safe_print.print(message)
 
     def send_dhcp_discover(self) -> None:
-        self.safe_print.print("sending DHCP discover...")
-        local_mac = get_if_hwaddr(self.interface)
-        fam, local_raw_mac = get_if_raw_hwaddr(self.interface)
-        broadcast_mac = "ff:ff:ff:ff:ff:ff"
-        source_ip = "0.0.0.0"
-        dest_ip = "255.255.255.255"
+        while True:
+            self.safe_print.print("sending DHCP discover...")
+            local_mac = get_if_hwaddr(self.interface)
+            fam, local_raw_mac = get_if_raw_hwaddr(self.interface)
+            broadcast_mac = "ff:ff:ff:ff:ff:ff"
+            source_ip = "0.0.0.0"
+            dest_ip = "255.255.255.255"
 
-        dhcp_discover = Ether(src=local_mac, dst=broadcast_mac) / IP(src=source_ip, dst=dest_ip) / UDP(
-            dport=67, sport=68) / BOOTP(chaddr=local_raw_mac) / DHCP(options=[("message-type", "discover"), "end"])
-        sendp(dhcp_discover, iface=self.interface, count=15, inter=0.5, verbose=False)
+            dhcp_discover = Ether(src=local_mac, dst=broadcast_mac) / IP(src=source_ip, dst=dest_ip) / UDP(
+                dport=67, sport=68) / BOOTP(chaddr=local_raw_mac) / DHCP(options=[("message-type", "discover"), "end"])
+            sendp(dhcp_discover, iface=self.interface, count=15, inter=0.5, verbose=False)
+            time.sleep(self.timeout)
+
+    def callback(self, packet: Packet) -> None:
+        if packet is not None:
+            self.update_dhcp_servers(packet)
+            self.print_status()
+            time.sleep(self.timeout)
 
     def run(self) -> None:
-        stop = False
-        while not stop:
-            try:
-                self.send_dhcp_discover()
-                sleep(1)
-                packet = self.packets.pop("DHCP")
-                if packet is not None:
-                    self.update_dhcp_servers(packet)
-                self.print_status()
-                sleep(3)
-            except KeyboardInterrupt:
-                stop = True
+        discover_sender = Thread(target=self.send_dhcp_discover)
+        discover_sender.start()
+        self.capture.apply_on_packets(callback=self.callback)

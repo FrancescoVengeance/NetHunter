@@ -1,8 +1,8 @@
 import json
 import pyshark
-from naspy.CiscoElement import *
+from src.naspy.CiscoElement import *
 import difflib
-from naspy.utilities import *
+from src.naspy.utilities import *
 from pathlib import Path
 
 

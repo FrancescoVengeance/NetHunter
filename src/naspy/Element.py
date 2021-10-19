@@ -2,7 +2,7 @@ import json
 import re
 import paramiko
 from paramiko.channel import Channel
-from naspy.Link import Link
+from src.naspy.Link import Link
 import subprocess
 
 
