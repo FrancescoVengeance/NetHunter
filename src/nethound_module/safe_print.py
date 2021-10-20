@@ -5,6 +5,6 @@ class SafePrint:
     def __init__(self):
         self.lock: RLock = RLock()
 
-    def print(self, string):
+    def print(self, string, color=""):
         with self.lock:
-            print(string)
+            print(color + string)
